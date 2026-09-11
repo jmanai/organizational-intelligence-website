@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Book a Free Consultation | Organizational Intelligence</title>
+<meta name="description" content="Book a free consultation with Organizational Intelligence. Bring a problem, a team, or a question that isn't quite working.">
+<link rel="canonical" href="https://organizationalintelligence.com/book">
+<meta name="robots" content="noindex, follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Book a Free Consultation | Organizational Intelligence">
+<meta property="og:description" content="Thirty minutes. No pitch deck. Bring a problem, a team, or a question that isn't quite working.">
+<meta property="og:image" content="/assets/img/og-home.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/anton-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/courier-prime-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/oi.css">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="Organizational Intelligence, home">
+      <img class="logo__img" src="assets/img/logo-ink.png" width="640" height="282" alt="Organizational Intelligence">
+    </a>
+    <nav class="nav nav--desktop" aria-label="Primary">
+      <a href="index.html#what-we-do">What We Do</a>
+      <a href="lego-serious-play.html">LEGO&reg; Serious Play&reg;</a>
+      <a href="podcast.html">Podcast</a>
+      <a href="about.html">About</a>
+    </nav>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="nav-drawer">Menu</button>
+  </div>
+</header>
+
+<div class="nav-drawer" id="nav-drawer" data-open="false">
+  <a href="index.html#what-we-do">What We Do</a>
+  <a href="lego-serious-play.html">LEGO&reg; Serious Play&reg;</a>
+  <a href="podcast.html">Podcast</a>
+  <a href="about.html">About</a>
+</div>
+
+<main id="main" class="section accent-cobalt">
+  <div class="wrap">
+    <div class="grid grid--split">
+      <div>
+        <p class="kicker">Free consultation</p>
+        <h1>Let&rsquo;s talk about what isn&rsquo;t quite working.</h1>
+        <p class="lead mt-3">Thirty minutes. No pitch deck. Bring a problem, a team, or a question, even one you don&rsquo;t have a name for yet.</p>
+
+        <ul class="dims mt-3" style="flex-direction:column;align-items:flex-start;">
+          <li>What&rsquo;s actually happening</li>
+          <li>What&rsquo;s changed</li>
+          <li>Where the friction is</li>
+          <li>What conversation isn&rsquo;t happening</li>
+        </ul>
+
+        <p class="mt-3">If we&rsquo;re not the right people for it, we&rsquo;ll say so and point you somewhere better.</p>
+      </div>
+
+      <div>
+        <!-- ==================================================================
+             ENQUIRY FORM  —  NEEDS AN ENDPOINT BEFORE LAUNCH
+             Set FORM_ENDPOINT in assets/js/book.js to the URL that should
+             receive submissions (Formspree / Basin / Tally / HubSpot / your
+             own). Until it is set, the form refuses to submit and tells the
+             visitor to email instead, rather than silently swallowing an
+             enquiry.
+             Already wired: hidden utm_*/ref fields (site.js carries them to
+             this page), a honeypot, and a 'consultation_booked' event on
+             success so placement → enquiry attribution still closes.
+             ================================================================== -->
+        <form class="q-card" id="booking-form" novalidate style="--accent:var(--cobalt);">
+          <p class="kicker kicker--plain">Tell us about it</p>
+          <h2 style="font-size:var(--t-h3);max-width:20ch;">Bring us the thing that&rsquo;s stuck.</h2>
+
+          <div class="grid grid--2 mt-3" style="gap:0 1rem;">
+            <label class="field"><span>First name <span class="req">*</span></span>
+              <input class="input" name="firstName" type="text" autocomplete="given-name" required></label>
+            <label class="field"><span>Last name</span>
+              <input class="input" name="lastName" type="text" autocomplete="family-name"></label>
+          </div>
+
+          <label class="field"><span>Email <span class="req">*</span></span>
+            <input class="input" name="email" type="email" autocomplete="email" required></label>
+
+          <div class="grid grid--2" style="gap:0 1rem;">
+            <label class="field"><span>Company name <span class="req">*</span></span>
+              <input class="input" name="company" type="text" autocomplete="organization" required></label>
+            <label class="field"><span>WhatsApp number</span>
+              <input class="input" name="whatsapp" type="tel" inputmode="tel" autocomplete="tel">
+              <em class="field__hint">If you&rsquo;d rather we reply on WhatsApp.</em></label>
+          </div>
+
+          <label class="field"><span>What&rsquo;s your goal, challenge, or what is it you&rsquo;re curious about? <span class="req">*</span></span>
+            <textarea class="input" name="message" rows="5" required
+              placeholder="The team, the situation, what isn&rsquo;t working. A few lines is plenty."></textarea></label>
+
+          <!-- honeypot: hidden from people, catnip for bots -->
+          <div class="hp" aria-hidden="true">
+            <label>Company website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
+
+          <input type="hidden" name="utm_source"><input type="hidden" name="utm_medium">
+          <input type="hidden" name="utm_campaign"><input type="hidden" name="ref">
+          <input type="hidden" name="page" value="book">
+
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+
+          <div class="btn-row mt-2">
+            <button class="btn btn--primary btn--lg" type="submit">Send it over</button>
+          </div>
+          <p class="meta mt-2" style="opacity:.7;">We reply to everything, usually within a day.</p>
+        </form>
+
+        <p class="meta mt-2">Prefer email? <a href="mailto:hello@orgintelligence.io">hello@orgintelligence.io</a></p>
+        <p class="meta mt-2">Prefer to start on your own? <a href="how-we-work-check.html">Take the WOW Assessment</a> first and bring the result.</p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="signup">
+      <div class="signup__pitch">
+        <p class="kicker">Insights to your inbox</p>
+        <h3>Occasional, practical, written by a person.</h3>
+        <p>Things we&rsquo;ve actually seen work. No theory, no newsletter treadmill.</p>
+      </div>
+      <form class="signup__form" id="newsletter-form" novalidate>
+        <label class="vh" for="nl-email">Email address</label>
+        <input class="input input--ink" id="nl-email" name="email" type="email" autocomplete="email" placeholder="you@company.com" required>
+        <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <button class="btn btn--yellow" type="submit" data-event="newsletter_signup" data-placement="footer">Subscribe</button>
+        <p class="signup__msg" role="alert" hidden></p>
+      </form>
+    </div>
+
+    <div class="footer-grid footer-grid--4">
+      <div>
+        <a class="logo logo--stack" href="index.html" aria-label="Organizational Intelligence, home">
+          <img class="logo__img" src="assets/img/logo-light.png" width="640" height="282" alt="Organizational Intelligence">
+        </a>
+      </div>
+
+      <div class="footer-col">
+        <h3>Studio</h3>
+        <ul>
+          <li><a href="index.html#what-we-do">What We Do</a></li>
+          <li><a href="lego-serious-play.html">LEGO&reg; Serious Play&reg;</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="podcast.html">Podcast</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>Start</h3>
+        <ul>
+          <li><a href="book.html" data-carry-source data-event="book_consultation" data-placement="footer">Book a Free Consultation</a></li>
+          <li><a href="how-we-work-check.html" data-carry-source data-event="start_check" data-placement="footer">The WOW Assessment</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>Listen</h3>
+        <ul class="ico-list">
+          <li><a class="ico-link" href="https://podcasts.apple.com/us/podcast/organizational-intelligence-podcast/id6804267156" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/apple.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">Apple Podcasts</a></li>
+          <li><a class="ico-link" href="https://open.spotify.com/show/4AWltTpsOrGKudJ5S6bLD6" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/spotify.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">Spotify</a></li>
+          <li><a class="ico-link" href="https://play.anghami.com/podcast/1098945694" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/anghami.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">anghami</a></li>
+        </ul>
+        <h3 style="margin-top:1.75rem;">Follow</h3>
+        <ul class="ico-list">
+          <li><a class="ico-link" href="https://www.linkedin.com/company/organizational-intelligence-oi" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/linkedin.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">LinkedIn</a></li>
+          <li><a class="ico-link" href="https://www.youtube.com/@Organizational-Intelligence" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/youtube.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">YouTube</a></li>
+          <li><a class="ico-link" href="https://www.instagram.com/organizational.intelligence/" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/instagram.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom footer-bottom--single">
+      <span>&copy; 2026 Organizational Intelligence</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+<script src="assets/js/newsletter.js"></script>
+<script src="assets/js/book.js"></script>
+</body>
+</html>

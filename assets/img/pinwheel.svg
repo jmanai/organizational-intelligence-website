@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="The Organizational Intelligence pinwheel motif — four torn paper blades turning around a centre point.">
+  <defs>
+    <path id="oi-blade" d="M200 200 L200 34 L228 46 L252 30 L281 48 L311 36 L333 62 L360 74 L347 104 L367 131 L351 159 L370 187 L338 200 Z"/>
+    <pattern id="oi-grid" width="18" height="18" patternUnits="userSpaceOnUse">
+      <path d="M0 0 H18 M0 0 V18" stroke="#F4F2EF" stroke-width="1.2" opacity=".55" fill="none"/>
+    </pattern>
+    <pattern id="oi-halftone" width="16" height="16" patternUnits="userSpaceOnUse">
+      <circle cx="4.5" cy="4.5" r="3.2" fill="#111111"/>
+    </pattern>
+    <clipPath id="oi-clip-yellow"><use href="#oi-blade" transform="rotate(90 200 200)"/></clipPath>
+    <clipPath id="oi-clip-ink"><use href="#oi-blade" transform="rotate(270 200 200)"/></clipPath>
+  </defs>
+
+  <!-- Four blades, one wedge rotated. Flat colour, torn outer edge, no gradient. -->
+  <use href="#oi-blade" fill="#FC442E"/>
+  <use href="#oi-blade" fill="#FCC304" transform="rotate(90 200 200)"/>
+  <use href="#oi-blade" fill="#18C8F0" transform="rotate(180 200 200)"/>
+  <use href="#oi-blade" fill="#111111" transform="rotate(270 200 200)"/>
+
+  <!-- Kit textures: halftone over the yellow blade, drawn grid over the ink blade. -->
+  <g clip-path="url(#oi-clip-yellow)"><rect x="0" y="0" width="400" height="400" fill="url(#oi-halftone)" opacity=".9"/></g>
+  <g clip-path="url(#oi-clip-ink)"><rect x="0" y="0" width="400" height="400" fill="url(#oi-grid)"/></g>
+
+  <!-- Centre punch -->
+  <circle cx="200" cy="200" r="19" fill="#F4F2EF"/>
+  <circle cx="200" cy="200" r="9" fill="#004AFF"/>
+</svg>
