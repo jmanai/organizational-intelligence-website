@@ -652,33 +652,6 @@
   }
   function pad(s, n) { while (s.length < n) s += ' '; return s; }
 
-  function submit(r) {
-    var payload = buildPayload(r);
-    var form = root.querySelector('[data-lead]');
-    var endpoint = form && form.getAttribute('data-endpoint');
-
-    document.dispatchEvent(new CustomEvent('oi:lead', { detail: payload }));
-    track('check_lead_captured', { placement: 'check_email_step' });
-
-    /* --- WIRE ME UP --------------------------------------------------
-       Set data-endpoint on the form, or listen for the oi:lead event.
-       Until an endpoint exists the response only reaches the console —
-       which means the report a person is now expecting never arrives.
-       This is the one launch blocker in the build. */
-    if (endpoint) {
-      fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      }).catch(function () {});
-    } else if (window.console) {
-      console.warn('[OI] No form endpoint configured: this response was NOT delivered.');
-      console.info(payload.summary);
-      console.info(payload);
-    }
-  }
-
-
   /* ---- Results (retained) --------------------------------------------- */
 
   function renderResults() {
@@ -856,7 +829,7 @@
       '<p class="kicker">Almost there</p>' +
       '<h1 data-focus style="font-size:var(--d3);">Where shall we send your report?</h1>' +
       '<p class="lead mt-3">Your score and full breakdown appear on the next screen. We send the written report to the address you give us.</p>' +
-      '<form class="mt-3" novalidate data-lead>' +
+      '<form class="mt-3" novalidate data-lead data-endpoint="/api/assessment">' +
       '<div class="grid grid--2" style="gap:0 1.25rem;">' +
       '<label class="field"><span>First name <span class="req">*</span></span><input class="input" name="firstName" type="text" autocomplete="given-name" required></label>' +
       '<label class="field"><span>Work email <span class="req">*</span></span><input class="input" name="email" type="email" autocomplete="email" required></label>' +
@@ -870,7 +843,7 @@
       '<em class="field__hint">If you\u2019d rather we send the report there.</em></label>' +
       '<button class="btn btn--primary btn--lg" type="submit">Reveal results <span aria-hidden="true">&rarr;</span></button>' +
       '<p class="mt-2" role="alert" data-error hidden style="color:var(--red);font-family:var(--ui);font-weight:600;"></p>' +
-      '<p class="meta" style="margin-top:1.25rem;">We&rsquo;ll only use these to send your report and occasional ideas about how work works. Unsubscribe any time.</p>' +
+      '<p class="meta" style="margin-top:1.25rem;">We&rsquo;ll use these details to send your report. Newsletter subscription is handled separately.</p>' +
       '</form>' +
       '</div>'
     );
@@ -910,32 +883,38 @@
         query: location.search || null
       };
 
-      /* --- WIRE ME UP ---------------------------------------------------
-         Point this at the form endpoint (HubSpot, Tally, Apps Script, …).
-         Until then the payload is dispatched as an event and echoed to the
-         console so nothing is silently lost in testing.               */
-      /* Keep context in step so the digest and any later render see it. */
+      /* Keep context in step so the digest and result render see it. */
       state.context.firstName = payload.firstName;
       state.context.email     = payload.email;
       state.context.whatsapp  = payload.whatsapp;
 
       var endpoint = form.getAttribute('data-endpoint');
       document.dispatchEvent(new CustomEvent('oi:lead', { detail: payload }));
-      track('check_lead_captured', { placement: 'check_reveal_gate' });
+      var btn = form.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      btn.textContent = 'Sending report…';
 
-      if (endpoint) {
-        fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload)
-        }).catch(function () { /* handled by the success state either way */ });
-      } else if (window.console) {
-        console.info('[OI] Lead payload (no endpoint configured yet):', payload);
-      }
-
-      /* R5-3 — the whole point of the gate: hand over the result. */
-      state.step++;
-      render();
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(function (response) {
+          return response.json().catch(function () { return {}; }).then(function (body) {
+            if (!response.ok) throw new Error(body.error || 'We could not send your report. Please try again.');
+          });
+        })
+        .then(function () {
+          track('check_lead_captured', { placement: 'check_reveal_gate' });
+          state.step++;
+          render();
+        })
+        .catch(function (sendError) {
+          btn.disabled = false;
+          btn.innerHTML = 'Reveal results <span aria-hidden="true">&rarr;</span>';
+          err.textContent = sendError.message || 'We could not send your report. Please try again.';
+          err.hidden = false;
+        });
     });
 
     wrap.appendChild(box);

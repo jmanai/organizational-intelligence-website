@@ -62,17 +62,7 @@
       </div>
 
       <div>
-        <!-- ==================================================================
-             ENQUIRY FORM  —  NEEDS AN ENDPOINT BEFORE LAUNCH
-             Set FORM_ENDPOINT in assets/js/book.js to the URL that should
-             receive submissions (Formspree / Basin / Tally / HubSpot / your
-             own). Until it is set, the form refuses to submit and tells the
-             visitor to email instead, rather than silently swallowing an
-             enquiry.
-             Already wired: hidden utm_*/ref fields (site.js carries them to
-             this page), a honeypot, and a 'consultation_booked' event on
-             success so placement → enquiry attribution still closes.
-             ================================================================== -->
+        <!-- The form posts to a same-origin Cloudflare Pages Function. -->
         <form class="q-card" id="booking-form" novalidate style="--accent:var(--cobalt);">
           <p class="kicker kicker--plain">Tell us about it</p>
           <h2 style="font-size:var(--t-h3);max-width:20ch;">Bring us the thing that&rsquo;s stuck.</h2>

@@ -31,6 +31,61 @@ portrait. Nothing is loaded from a third party.
 
 ---
 
+## Hosting and environments
+
+The site is designed for Cloudflare Pages with Git integration:
+
+- `main` is the production branch and deploys to `orgintelligence.io`.
+- `develop` is the stable development branch and deploys to its Pages branch URL.
+- Other branches receive disposable preview URLs for review before merge.
+
+There is no build command. Set the Pages build output directory to `/` (the
+repository root). The `_routes.json` file ensures only `/api/*` requests invoke
+Pages Functions; all static files remain on the unlimited static asset path.
+
+### Server-side forms
+
+Cloudflare Pages Functions provide these same-origin routes:
+
+- `POST /api/contact` sends the consultation enquiry to the configured inbox.
+- `POST /api/assessment` sends the visitor's report and a lead notification.
+
+Configure these secrets separately for Cloudflare's Preview and Production
+environments:
+
+| Variable | Purpose | Example |
+|---|---|---|
+| `RESEND_API_KEY` | Resend server API key | `re_...` |
+| `EMAIL_FROM` | Verified sender identity | `OI Website <website@orgintelligence.io>` |
+| `CONTACT_TO_EMAIL` | Enquiry and lead destination | `hello@orgintelligence.io` |
+| `ALLOWED_ORIGINS` | Extra allowed origins, comma separated | `https://develop.example.pages.dev` |
+| `TURNSTILE_SECRET_KEY` | Optional until the Turnstile widget is added | secret from Cloudflare |
+
+Do not commit real values. For local development, copy `.dev.vars.example` to
+`.dev.vars`, fill in test credentials, then run:
+
+```sh
+npx wrangler pages dev .
+```
+
+Use a Resend test recipient in Preview. Production should use a separate API
+key and the real `CONTACT_TO_EMAIL` value. If `TURNSTILE_SECRET_KEY` is absent,
+server-side Turnstile enforcement is disabled; enable it only when its frontend
+widget and site key have also been configured.
+
+### Domain setup
+
+Keep the registration at GoDaddy, add `orgintelligence.io` as a Cloudflare DNS
+zone, and replace the GoDaddy nameservers with the assigned Cloudflare
+nameservers. Preserve existing MX records. Attach the apex domain and `www` in
+the Pages project, choose one canonical hostname, and redirect the other.
+
+Resend will provide DKIM and SPF DNS records for its sending subdomain. These
+authenticate outbound website mail and should not replace the domain's existing
+inbound-email MX records.
+
+---
+
 ## The design system
 
 `assets/css/oi.css` is the style guide expressed as CSS. Everything else consumes it.

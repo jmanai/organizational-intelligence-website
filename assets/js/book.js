@@ -1,16 +1,11 @@
 /* Consultation enquiry form.
  *
  * ── ONE THING TO SET BEFORE LAUNCH ───────────────────────────────────────
- * FORM_ENDPOINT is the URL that receives submissions. Options that work with
- * a static site: Formspree, Basin, Tally, Netlify Forms, or a HubSpot form
- * endpoint. Paste the URL below and the form goes live.
- *
- * While it is empty the form deliberately refuses to submit and points the
- * visitor at the email address instead. That is on purpose: a form that
- * silently loses an enquiry is worse than one that admits it isn't ready.
+ * The same-origin Cloudflare Pages Function keeps email credentials on the
+ * server and gives preview and production deployments separate secrets.
  * ─────────────────────────────────────────────────────────────────────────
  */
-var FORM_ENDPOINT = '';
+var FORM_ENDPOINT = '/api/contact';
 
 (function () {
   var form = document.getElementById('booking-form');
@@ -78,30 +73,28 @@ var FORM_ENDPOINT = '';
       return;
     }
 
-    if (!FORM_ENDPOINT) {
-      fail('This form isn\'t connected yet. Please email hello@orgintelligence.io ' +
-           'and we\'ll pick it up from there.');
-      return;
-    }
-
     var btn = form.querySelector('button[type="submit"]');
     btn.disabled = true;
     btn.textContent = 'Sending…';
 
     fetch(FORM_ENDPOINT, {
       method: 'POST',
-      headers: { 'Accept': 'application/json' },
-      body: new FormData(form)
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(Object.fromEntries(new FormData(form).entries()))
     })
       .then(function (r) {
-        if (!r.ok) throw new Error(r.status);
+        return r.json().catch(function () { return {}; }).then(function (body) {
+          if (!r.ok) throw new Error(body.error || r.status);
+        });
+      })
+      .then(function () {
         succeed();
       })
-      .catch(function () {
+      .catch(function (err) {
         btn.disabled = false;
         btn.textContent = 'Send it over';
-        fail('That didn\'t send. Please try again, or email ' +
-             'hello@orgintelligence.io directly.');
+        fail(err.message && !/^\d+$/.test(err.message) ? err.message :
+             'That didn\'t send. Please try again, or email hello@orgintelligence.io directly.');
       });
   });
 })();
