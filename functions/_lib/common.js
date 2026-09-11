@@ -39,6 +39,10 @@ export function validEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && value.length <= 254;
 }
 
+function integrationsAreMocked(env) {
+  return clean(env.INTEGRATIONS_MODE, 20).toLowerCase() === "mock";
+}
+
 export function escapeHtml(value) {
   return String(value).replace(/[&<>"']/g, (char) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
@@ -78,6 +82,8 @@ export async function verifyTurnstile(request, env, token) {
 }
 
 export async function sendEmail(env, message) {
+  if (integrationsAreMocked(env)) return { id: "mock-email" };
+
   if (!env.RESEND_API_KEY || !env.EMAIL_FROM) {
     throw new Error("Missing RESEND_API_KEY or EMAIL_FROM");
   }
@@ -100,6 +106,8 @@ export async function sendEmail(env, message) {
 }
 
 export async function submitHubSpotForm(env, formId, fields, context = {}) {
+  if (integrationsAreMocked(env)) return { id: "mock-hubspot-submission" };
+
   const portalId = clean(env.HUBSPOT_PORTAL_ID, 30);
   const safeFormId = clean(formId, 100);
   if (!portalId || !safeFormId) throw new Error("Missing HubSpot form configuration");

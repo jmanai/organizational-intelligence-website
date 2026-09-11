@@ -63,6 +63,7 @@ environments:
 
 | Variable | Purpose | Example |
 |---|---|---|
+| `INTEGRATIONS_MODE` | Set to `mock` locally to prevent outbound HubSpot and Resend calls | `mock` |
 | `RESEND_API_KEY` | Resend server API key | `re_...` |
 | `EMAIL_FROM` | Verified sender identity | `OI Website <website@orgintelligence.io>` |
 | `CONTACT_TO_EMAIL` | Enquiry and lead destination | `hello@orgintelligence.io` |
@@ -79,6 +80,12 @@ Do not commit real values. For local development, copy `.dev.vars.example` to
 ```sh
 npx wrangler pages dev .
 ```
+
+Keep `INTEGRATIONS_MODE=mock` in the local `.dev.vars` file. In mock mode the
+Pages Functions perform their normal validation and return successful responses,
+but they do not create HubSpot contacts or send Resend emails. Do not define
+this variable in Cloudflare Preview or Production; those environments use the
+real integrations.
 
 Use a Resend test recipient in Preview. Production should use a separate API
 key and the real `CONTACT_TO_EMAIL` value. If `TURNSTILE_SECRET_KEY` is absent,
