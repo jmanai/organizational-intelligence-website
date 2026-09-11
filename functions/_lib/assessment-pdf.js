@@ -187,15 +187,20 @@ function pageTwo(data) {
   c.push(text("F3", 9, 42, y, "WHAT HAPPENS NEXT", COLORS.ink));
   c.push(text("F2", 22, 42, y - 34, "Turn the insight into a better way of working.", COLORS.ink));
   paragraph(c, "A 30-minute conversation can help make sense of the result, test what is really creating friction, and choose a practical place to begin.", 42, y - 62, 80, 11, 16);
-  c.push(rect(42, y - 145, 210, 38, COLORS.blue));
-  c.push(text("F2", 11, 61, y - 131, "BOOK A FREE CONSULTATION", COLORS.paper));
-  c.push(text("F1", 10, 42, 52, "orgintelligence.io", COLORS.ink));
+  const buttonY = y - 145;
+  c.push(rect(42, buttonY, 210, 38, COLORS.blue));
+  c.push(text("F2", 11, 61, buttonY + 14, "BOOK A FREE CONSULTATION", COLORS.paper));
+  c.push(text("F1", 10, 42, 52, "hello@orgintelligence.io  |  orgintelligence.io", COLORS.ink));
   c.push(text("F1", 9, 42, 34, `Prepared for ${data.firstName} | ${data.email}`, [0.35, 0.35, 0.35]));
   c.push(text("F3", 8, 504, 34, "02 / 02", [0.35, 0.35, 0.35]));
-  return c.join("\n");
+  return { content: c.join("\n"), buttonY };
 }
 
-function buildPdf(streams) {
+function linkAnnotation(rectangle, uri) {
+  return `<< /Type /Annot /Subtype /Link /Rect [${rectangle.join(" ")}] /Border [0 0 0] /A << /S /URI /URI (${esc(uri)}) >> >>`;
+}
+
+function buildPdf(firstPage, secondPage) {
   const objects = [
     "<< /Type /Catalog /Pages 2 0 R >>",
     "<< /Type /Pages /Kids [6 0 R 8 0 R] /Count 2 >>",
@@ -203,9 +208,11 @@ function buildPdf(streams) {
     "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
     "<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold >>",
     "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 7 0 R >>",
-    `<< /Length ${streams[0].length} >>\nstream\n${streams[0]}\nendstream`,
-    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 9 0 R >>",
-    `<< /Length ${streams[1].length} >>\nstream\n${streams[1]}\nendstream`
+    `<< /Length ${firstPage.length} >>\nstream\n${firstPage}\nendstream`,
+    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 9 0 R /Annots [10 0 R 11 0 R] >>",
+    `<< /Length ${secondPage.content.length} >>\nstream\n${secondPage.content}\nendstream`,
+    linkAnnotation([42, secondPage.buttonY, 252, secondPage.buttonY + 38], "https://orgintelligence.io/book"),
+    linkAnnotation([42, 45, 170, 64], "mailto:hello@orgintelligence.io")
   ];
   let pdf = "%PDF-1.4\n%OI-WOW\n";
   const offsets = [0];
@@ -228,7 +235,7 @@ export function createAssessmentPdf(input) {
     primaryPattern: ascii(input.primaryPattern).slice(0, 100),
     oneThing: ascii(input.oneThing).slice(0, 360)
   };
-  return buildPdf([pageOne(data), pageTwo(data)]);
+  return buildPdf(pageOne(data), pageTwo(data));
 }
 
 export function bytesToBase64(bytes) {
