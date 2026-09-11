@@ -64,6 +64,9 @@ var LIST_ENDPOINT = '/api/newsletter';
           form.reset();
           say('Thanks. Check your email to confirm.', true);
           btn.textContent = 'Subscribed';
+          document.dispatchEvent(new CustomEvent('oi:track', { detail: {
+            event: 'newsletter_subscribed', placement: btn.getAttribute('data-placement') || 'footer'
+          } }));
         })
         .catch(function () {
           btn.disabled = false;

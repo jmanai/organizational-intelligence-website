@@ -228,25 +228,30 @@ arbitrarily.
 
 ### Analytics
 
-Any element with `data-event` and `data-placement` pushes to `window.dataLayer`
-and fires an `oi:track` CustomEvent on click. Events currently emitted:
+Google Analytics 4 uses measurement ID `G-FT081H9N8L`. It loads only on the
+production domains and only after the visitor accepts analytics cookies. Any
+element with `data-event` and `data-placement` fires an `oi:track` event that
+`site.js` maps to GA4. Events currently emitted include:
 `book_consultation`, `start_check`, `explore_lsp`, `podcast_listen`,
 `check_started`, `check_completed`, `check_lead_captured`,
-`team_invite_clicked`, `team_response_completed`. Placement values distinguish
-header, hero, mid-page and final CTAs, so §15's "primary CTA clicks by
-placement" works out of the box once a tag manager is attached.
+`team_invite_clicked`, `team_response_completed`, `consultation_booked`, and
+`newsletter_subscribed`. Placement values distinguish header, hero, mid-page
+and final CTAs. Localhost and `dev.orgintelligence.io` do not load GA4.
 
 ---
 
 ## Tests
 
-Run from the parent folder with a local server on port 8899:
+Run with the local Cloudflare Pages server on port 8788:
 
 ```
-python3 -m http.server 8899 --directory site &
+npx wrangler pages dev . --port 8788
 node test-check.js     # 29 assertions on scoring, bands, patterns, gap logic
-node qa.js             # the §18 build QA checklist across all six pages
+node qa.js             # the §18 build QA checklist across public pages
 ```
+
+Set `PLAYWRIGHT_CHROMIUM_PATH` when Playwright cannot locate a browser, and
+override the test host with `QA_BASE_URL` when needed.
 
 `test-check.js` covers the 0 / 50 / 75 / 100 cases the brief asks for, every
 cross-dimensional trigger individually, the pattern-selection rules, tie

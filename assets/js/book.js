@@ -42,8 +42,6 @@ var FORM_ENDPOINT = '/api/contact';
        placement → enquiry closes without a second analytics path. */
     try {
       var detail = { event: 'consultation_booked', placement: 'book_form', label: 'Send it over' };
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push(detail);
       document.dispatchEvent(new CustomEvent('oi:track', { detail: detail }));
     } catch (err) { /* analytics must never break the confirmation */ }
   }

@@ -677,6 +677,27 @@ input.input--ink{
   background:transparent; border-color:var(--paper); color:var(--paper);
 }
 input.input--ink::placeholder{ color:rgba(244,242,239,.45); }
+
+/* Analytics consent --------------------------------------------------- */
+.cookie-notice{
+  position:fixed; z-index:1000; left:1rem; right:1rem; bottom:1rem;
+  max-width:980px; margin-inline:auto; padding:1.25rem;
+  display:flex; align-items:center; justify-content:space-between; gap:1.5rem;
+  background:var(--paper); color:var(--ink); border:var(--rule);
+  box-shadow:8px 8px 0 var(--ink);
+}
+.cookie-notice p{ margin:0; max-width:62ch; }
+.cookie-notice .kicker{ margin-bottom:.35rem; }
+.cookie-notice__actions{ display:flex; gap:.75rem; flex-shrink:0; }
+.footer-link-button{
+  appearance:none; border:0; padding:0; background:none; color:inherit;
+  font:inherit; text-decoration:underline; cursor:pointer;
+}
+@media (max-width:700px){
+  .cookie-notice{ align-items:stretch; flex-direction:column; }
+  .cookie-notice__actions{ flex-wrap:wrap; }
+  .cookie-notice__actions .btn{ flex:1 1 10rem; }
+}
 .signup__msg{
   flex:1 1 100%; margin:.35rem 0 0;
   font-family:var(--ui); font-size:var(--r3); line-height:1.45;

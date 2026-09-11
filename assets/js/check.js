@@ -1022,8 +1022,6 @@
   }
   function track(event, extra) {
     var detail = Object.assign({ event: event }, extra || {});
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push(detail);
     document.dispatchEvent(new CustomEvent('oi:track', { detail: detail }));
   }
 

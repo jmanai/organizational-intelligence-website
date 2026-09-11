@@ -141,8 +141,6 @@
         counted = true;
         try {
           var detail = { event: 'podcast_listen', placement: 'latest_episode_player', label: 'play' };
-          window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push(detail);
           document.dispatchEvent(new CustomEvent('oi:track', { detail: detail }));
         } catch (e) {}
       }
