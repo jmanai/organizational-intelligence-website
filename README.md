@@ -289,10 +289,10 @@ stylesheet.
   group size. I picked plausible ranges. Correct them to your actual practice.
 - The LSP page mentions Dubai and the UAE in the intro for search. Adjust once
   geography targeting is confirmed (§17).
-- `hello@organizationalintelligence.com` on `book.html` is a placeholder.
+- `hello@orgintelligence.io` is the public contact address and currently forwards through Cloudflare Email Routing.
 - Podcast, article and tool links in the Ideas grid are `#` placeholders.
-- No cookie banner or privacy policy yet. Add both before launch, and before
-  the lead form goes live.
+- The privacy policy is published at `/privacy`. Add a consent banner if
+  non-essential analytics or advertising cookies are introduced later.
 - The trademark disclaimer is in the footer on every page and in the LSP FAQ.
   Have it reviewed alongside the rest of the legal copy.
 

@@ -1,6 +1,10 @@
 /* Unit tests for the How We Work Check scoring + pattern logic (§11.4–11.8).
    Runs the real engine in a real browser, so what is tested is what ships. */
 const { chromium } = require('playwright');
+const BASE = process.env.QA_BASE_URL || 'http://localhost:8788/';
+const launchOptions = process.env.PLAYWRIGHT_CHROMIUM_PATH
+  ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH }
+  : {};
 
 const CASES = [
   // --- §18 QA: test cases at 0, 50, 75, 100 -----------------------------
@@ -95,11 +99,11 @@ const GAP_CASES = [
 ];
 
 (async () => {
-  const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+  const browser = await chromium.launch(launchOptions);
   const page = await browser.newPage();
   const consoleErrors = [];
   page.on('pageerror', e => consoleErrors.push(e.message));
-  await page.goto('http://localhost:8899/how-we-work-check.html', { waitUntil: 'networkidle' });
+  await page.goto(BASE + 'how-we-work-check.html', { waitUntil: 'networkidle' });
 
   let pass = 0, fail = 0;
   const failures = [];

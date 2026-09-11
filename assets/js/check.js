@@ -843,7 +843,7 @@
       '<em class="field__hint">If you\u2019d rather we send the report there.</em></label>' +
       '<button class="btn btn--primary btn--lg" type="submit">Reveal results <span aria-hidden="true">&rarr;</span></button>' +
       '<p class="mt-2" role="alert" data-error hidden style="color:var(--red);font-family:var(--ui);font-weight:600;"></p>' +
-      '<p class="meta" style="margin-top:1.25rem;">We&rsquo;ll use these details to send your report. Newsletter subscription is handled separately.</p>' +
+      '<p class="meta" style="margin-top:1.25rem;">We&rsquo;ll use these details to send your report. Newsletter subscription is handled separately. Read our <a href="privacy.html">privacy policy</a>.</p>' +
       '</form>' +
       '</div>'
     );

@@ -59,7 +59,7 @@
     /* Episode artwork, when the feed carries it. Decorative: the title is
        right beside it, so an alt text would only repeat what is already read. */
     var art = ep.image
-      ? '<img class="ep-art" src="' + esc(ep.image) + '" alt="" width="300" height="300" loading="lazy">'
+      ? '<img class="ep-art" src="' + esc(ep.image) + '" alt="" role="presentation" aria-hidden="true" width="300" height="300" loading="lazy">'
       : '';
 
     block.innerHTML =

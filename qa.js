@@ -1,8 +1,11 @@
 /* Build QA — §18 of the brief, run against the real pages in a real browser. */
 const { chromium } = require('playwright');
 
-const PAGES = ['index.html', 'lego-serious-play.html', 'ideas.html', 'about.html', 'book.html', 'how-we-work-check.html'];
-const BASE = 'http://localhost:8899/';
+const PAGES = ['index.html', 'lego-serious-play.html', 'podcast.html', 'about.html', 'book.html', 'how-we-work-check.html', 'privacy.html', '404.html'];
+const BASE = process.env.QA_BASE_URL || 'http://localhost:8788/';
+const launchOptions = process.env.PLAYWRIGHT_CHROMIUM_PATH
+  ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH }
+  : {};
 
 const issues = [];
 const notes = [];
@@ -22,7 +25,7 @@ function ratio(a, b) {
 }
 
 (async () => {
-  const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome' });
+  const browser = await chromium.launch(launchOptions);
 
   /* ---- 1. Palette contrast (design-system level, once) ---------------- */
   const PAL = { ink: '111111', paper: 'F4F2EF', cobalt: '004AFF', white: 'FFFFFF',
@@ -77,6 +80,7 @@ function ratio(a, b) {
                      !document.querySelector(`label[for="${i.id}"]`)).length;
       out.skipLink = !!document.querySelector('.skip-link');
       out.hasOg = !!document.querySelector('meta[property="og:title"]');
+      out.robots = (document.querySelector('meta[name="robots"]') || {}).content || '';
       // horizontal overflow
       out.docWidth = document.documentElement.scrollWidth;
       out.winWidth = window.innerWidth;
@@ -85,7 +89,8 @@ function ratio(a, b) {
 
     if (!audit.title || audit.title.length > 65) fail(file, `title length ${audit.title.length} ("${audit.title}")`);
     if (!audit.desc || audit.desc.length < 60 || audit.desc.length > 175) fail(file, `meta description length ${audit.desc.length}`);
-    if (!audit.canonical) fail(file, 'no canonical');
+    const is404 = file === '404.html';
+    if (!is404 && !audit.canonical) fail(file, 'no canonical');
     if (audit.lang !== 'en') fail(file, 'html lang missing');
     if (audit.h1s.length !== 1) fail(file, `${audit.h1s.length} h1 elements`);
     if (audit.imgsNoAlt.length) fail(file, `img without alt: ${audit.imgsNoAlt.join(', ')}`);
@@ -94,7 +99,8 @@ function ratio(a, b) {
     if (audit.buttonsNoName) fail(file, `${audit.buttonsNoName} button(s) with no accessible name`);
     if (audit.inputsNoLabel) fail(file, `${audit.inputsNoLabel} form control(s) with no label`);
     if (!audit.skipLink) fail(file, 'no skip link');
-    if (!audit.hasOg) fail(file, 'no og:title');
+    if (!is404 && !audit.hasOg) fail(file, 'no og:title');
+    if (is404 && !audit.robots.includes('noindex')) fail(file, '404 page must be noindex');
     if (audit.docWidth > audit.winWidth + 1) fail(file, `horizontal overflow at 1440 (${audit.docWidth}px)`);
 
     // heading order: never skip a level going down
@@ -178,6 +184,7 @@ function ratio(a, b) {
     page.on('pageerror', e => errs.push(e.message));
     await page.goto(BASE + 'how-we-work-check.html', { waitUntil: 'networkidle' });
     await page.fill('input[name="team"]', 'QA team');
+    await page.selectOption('select[name="teamSize"]', { label: '6–10' });
     await page.click('button[type="submit"]');
     for (const key of ['MEET', 'DECIDE', 'SHARE', 'AGREE', 'ALIGN']) {
       for (let q = 0; q < 4; q++) await page.check(`input[name="${key}-${q}"][value="1"]`);
@@ -193,7 +200,7 @@ function ratio(a, b) {
     if (done.overflow > 1) fail('how-we-work-check.html', `results overflow at 375 (+${done.overflow}px)`);
     if (!done.gated) fail('how-we-work-check.html', 'lead capture missing from results');
     if (errs.length) fail('how-we-work-check.html', 'JS errors during mobile run: ' + errs.join(' | '));
-    else console.log('✓ check completes on a 375px viewport, result shown before email is asked for');
+    else console.log('✓ check completes on a 375px viewport and reaches the report delivery gate');
     await page.close();
   }
 
@@ -205,6 +212,7 @@ function ratio(a, b) {
     let blocked = await page.evaluate(() => !!document.querySelector('#check form [data-error]:not([hidden])'));
     if (!blocked) fail('how-we-work-check.html', 'intro submits with no team name');
     await page.fill('input[name="team"]', 'QA');
+    await page.selectOption('select[name="teamSize"]', { label: '2–5' });
     await page.click('button[type="submit"]');
     await page.check('input[name="MEET-0"][value="0"]');  // only one of four
     await page.click('button[type="submit"]');
