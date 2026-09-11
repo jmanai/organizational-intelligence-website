@@ -877,6 +877,7 @@
         strength: r.strength.key,
         friction: r.friction.key,
         patterns: r.patterns.map(function (p) { return p.id; }),
+        primaryPattern: r.primaryPattern ? r.primaryPattern.id : null,
         recommendation: r.recommendation.title,
         oneThing: state.context.oneThing || null,
         source: document.referrer || null,

@@ -2,6 +2,7 @@ import {
   assertSameOrigin, clean, escapeHtml, handleError, HttpError, json, readJson,
   sendEmail, submitHubSpotForm, validEmail, verifyTurnstile
 } from "../_lib/common.js";
+import { bytesToBase64, createAssessmentPdf } from "../_lib/assessment-pdf.js";
 
 // Keep these keys aligned with the assessment engine in assets/js/check.js.
 // The browser submits the public result object's dimension map unchanged.
@@ -61,11 +62,18 @@ export async function onRequestPost(context) {
 
     const leadRecipient = context.env.CONTACT_TO_EMAIL;
     if (leadRecipient && validEmail(leadRecipient)) {
+      const pdf = createAssessmentPdf({ ...input, firstName, email, team, overall });
+      const safeTeam = team.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "team";
       await sendEmail(context.env, {
         to: [leadRecipient],
         reply_to: email,
         subject: `New assessment lead — ${team}`,
-        text: `${firstName} <${email}> completed an assessment.\n\n${summary}\n\nRole: ${clean(input.role, 200)}\nWhatsApp: ${clean(input.whatsapp, 100) || "—"}\nOne thing: ${clean(input.oneThing, 2000) || "—"}`
+        text: `${firstName} <${email}> completed an assessment.\n\n${summary}\n\nRole: ${clean(input.role, 200)}\nWhatsApp: ${clean(input.whatsapp, 100) || "—"}\nOne thing: ${clean(input.oneThing, 2000) || "—"}\n\nThe complete branded report is attached.`,
+        attachments: [{
+          filename: `wow-assessment-${safeTeam}.pdf`,
+          content: bytesToBase64(pdf),
+          content_type: "application/pdf"
+        }]
       });
     }
 

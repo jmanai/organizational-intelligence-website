@@ -52,7 +52,8 @@ Pages Functions; all static files remain on the unlimited static asset path.
 Cloudflare Pages Functions provide these same-origin routes:
 
 - `POST /api/contact` sends the consultation enquiry to the configured inbox.
-- `POST /api/assessment` sends the visitor's report and a lead notification.
+- `POST /api/assessment` sends the visitor's report and a lead notification. The
+  internal notification includes a branded PDF with the full assessment result.
 - `POST /api/newsletter` records a newsletter signup in HubSpot.
 
 All three routes submit their successful lead capture to dedicated HubSpot
