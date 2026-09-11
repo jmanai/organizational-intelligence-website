@@ -1,6 +1,6 @@
 import {
   assertSameOrigin, clean, escapeHtml, handleError, HttpError, json, readJson,
-  sendEmail, validEmail, verifyTurnstile
+  sendEmail, submitHubSpotForm, validEmail, verifyTurnstile
 } from "../_lib/common.js";
 
 // Keep these keys aligned with the assessment engine in assets/js/check.js.
@@ -42,6 +42,15 @@ export async function onRequestPost(context) {
       `Friction: ${clean(input.friction, 100)}`,
       `Recommended place to start: ${recommendation}`
     ].join("\n");
+
+    await submitHubSpotForm(context.env, context.env.HUBSPOT_ASSESSMENT_FORM_ID, [
+      { name: "email", value: email },
+      { name: "firstname", value: firstName },
+      { name: "message", value: `${summary}\n\nRole: ${clean(input.role, 200) || "—"}\nWhatsApp: ${clean(input.whatsapp, 100) || "—"}\nOne thing: ${clean(input.oneThing, 2000) || "—"}` }
+    ], {
+      pageUri: clean(input.source, 1000),
+      pageName: "OI Website — WOW Assessment"
+    });
 
     await sendEmail(context.env, {
       to: [email],

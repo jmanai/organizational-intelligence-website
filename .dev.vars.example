@@ -2,7 +2,10 @@
 RESEND_API_KEY=re_test_replace_me
 EMAIL_FROM=OI Website <website@orgintelligence.io>
 CONTACT_TO_EMAIL=hello@orgintelligence.io
+HUBSPOT_PORTAL_ID=46983756
+HUBSPOT_NEWSLETTER_FORM_ID=9d630196-d93d-43c6-bd64-164dea2ad28c
+HUBSPOT_CONTACT_FORM_ID=4e596bdd-a11f-4059-9896-d2e9c0ea3552
+HUBSPOT_ASSESSMENT_FORM_ID=12c79327-a122-4c8a-bfb6-70226091c8aa
 ALLOWED_ORIGINS=http://localhost:8788
 # Add after Turnstile is configured. When absent, verification is disabled.
 # TURNSTILE_SECRET_KEY=replace_me
-

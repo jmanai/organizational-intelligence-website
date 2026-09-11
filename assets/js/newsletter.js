@@ -12,7 +12,7 @@
  * follow up, so they never find out.
  * ─────────────────────────────────────────────────────────────────────────
  */
-var LIST_ENDPOINT = '';
+var LIST_ENDPOINT = '/api/newsletter';
 
 (function () {
   var forms = document.querySelectorAll('#newsletter-form');
@@ -51,8 +51,13 @@ var LIST_ENDPOINT = '';
 
       fetch(LIST_ENDPOINT, {
         method: 'POST',
-        headers: { 'Accept': 'application/json' },
-        body: new FormData(form)
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          website: hp ? hp.value : '',
+          source: location.href,
+          ref: document.referrer || ''
+        })
       })
         .then(function (r) {
           if (!r.ok) throw new Error(r.status);

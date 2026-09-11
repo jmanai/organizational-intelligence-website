@@ -53,6 +53,10 @@ Cloudflare Pages Functions provide these same-origin routes:
 
 - `POST /api/contact` sends the consultation enquiry to the configured inbox.
 - `POST /api/assessment` sends the visitor's report and a lead notification.
+- `POST /api/newsletter` records a newsletter signup in HubSpot.
+
+All three routes submit their successful lead capture to dedicated HubSpot
+forms. Resend remains responsible for transactional and notification email.
 
 Configure these secrets separately for Cloudflare's Preview and Production
 environments:
@@ -62,6 +66,10 @@ environments:
 | `RESEND_API_KEY` | Resend server API key | `re_...` |
 | `EMAIL_FROM` | Verified sender identity | `OI Website <website@orgintelligence.io>` |
 | `CONTACT_TO_EMAIL` | Enquiry and lead destination | `hello@orgintelligence.io` |
+| `HUBSPOT_PORTAL_ID` | HubSpot account ID | `46983756` |
+| `HUBSPOT_NEWSLETTER_FORM_ID` | Newsletter form ID | HubSpot form UUID |
+| `HUBSPOT_CONTACT_FORM_ID` | Contact form ID | HubSpot form UUID |
+| `HUBSPOT_ASSESSMENT_FORM_ID` | Assessment form ID | HubSpot form UUID |
 | `ALLOWED_ORIGINS` | Extra allowed origins, comma separated | `https://develop.example.pages.dev` |
 | `TURNSTILE_SECRET_KEY` | Optional until the Turnstile widget is added | secret from Cloudflare |
 

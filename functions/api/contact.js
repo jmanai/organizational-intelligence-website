@@ -1,6 +1,6 @@
 import {
   assertSameOrigin, clean, escapeHtml, handleError, HttpError, json, readJson,
-  sendEmail, validEmail, verifyTurnstile
+  sendEmail, submitHubSpotForm, validEmail, verifyTurnstile
 } from "../_lib/common.js";
 
 export async function onRequestPost(context) {
@@ -29,6 +29,18 @@ export async function onRequestPost(context) {
     }
     await verifyTurnstile(context.request, context.env, clean(input.turnstileToken, 2048));
 
+    await submitHubSpotForm(context.env, context.env.HUBSPOT_CONTACT_FORM_ID, [
+      { name: "email", value: submission.email },
+      { name: "firstname", value: submission.firstName },
+      { name: "lastname", value: submission.lastName },
+      { name: "company", value: submission.company },
+      { name: "phone", value: submission.whatsapp },
+      { name: "message", value: submission.message }
+    ], {
+      pageUri: submission.ref,
+      pageName: "OI Website — Contact"
+    });
+
     const recipient = context.env.CONTACT_TO_EMAIL;
     if (!recipient || !validEmail(recipient)) throw new Error("Missing CONTACT_TO_EMAIL");
     const name = `${submission.firstName} ${submission.lastName}`.trim();
@@ -54,4 +66,3 @@ export async function onRequestPost(context) {
     return handleError(error);
   }
 }
-
