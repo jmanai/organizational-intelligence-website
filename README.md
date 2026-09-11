@@ -36,8 +36,12 @@ portrait. Nothing is loaded from a third party.
 The site is designed for Cloudflare Pages with Git integration:
 
 - `main` is the production branch and deploys to `orgintelligence.io`.
-- `develop` is the stable development branch and deploys to its Pages branch URL.
+- `develop` is the stable development branch and deploys to
+  `develop.organizational-intelligence-website.pages.dev`.
 - Other branches receive disposable preview URLs for review before merge.
+
+The Cloudflare production hostname is
+`organizational-intelligence-website.pages.dev` until the custom domain is attached.
 
 There is no build command. Set the Pages build output directory to `/` (the
 repository root). The `_routes.json` file ensures only `/api/*` requests invoke
