@@ -3,7 +3,9 @@ import {
   sendEmail, validEmail, verifyTurnstile
 } from "../_lib/common.js";
 
-const DIMENSIONS = ["meet", "decide", "info", "agree", "align"];
+// Keep these keys aligned with the assessment engine in assets/js/check.js.
+// The browser submits the public result object's dimension map unchanged.
+const DIMENSIONS = ["MEET", "DECIDE", "SHARE", "AGREE", "ALIGN"];
 
 export async function onRequestPost(context) {
   try {
@@ -26,7 +28,7 @@ export async function onRequestPost(context) {
     }
     await verifyTurnstile(context.request, context.env, clean(input.turnstileToken, 2048));
 
-    const labels = { meet: "Meetings", decide: "Decisions", info: "Information", agree: "Agreements", align: "Alignment" };
+    const labels = { MEET: "Meetings", DECIDE: "Decisions", SHARE: "Information", AGREE: "Agreements", ALIGN: "Alignment" };
     const scoreLines = DIMENSIONS.map((key) => `${labels[key]}: ${Number(percentages[key])}/100`);
     const band = clean(input.overallBand, 100);
     const recommendation = clean(input.recommendation, 500);
@@ -63,4 +65,3 @@ export async function onRequestPost(context) {
     return handleError(error);
   }
 }
-
