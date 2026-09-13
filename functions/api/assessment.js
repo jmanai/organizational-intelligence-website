@@ -62,7 +62,16 @@ export async function onRequestPost(context) {
 
     const leadRecipient = context.env.CONTACT_TO_EMAIL;
     if (leadRecipient && validEmail(leadRecipient)) {
-      const pdf = createAssessmentPdf({ ...input, firstName, email, team, overall });
+      const loadAsset = async (path) => {
+        if (!context.env.ASSETS) return null;
+        const response = await context.env.ASSETS.fetch(new URL(path, context.request.url));
+        return response.ok ? new Uint8Array(await response.arrayBuffer()) : null;
+      };
+      const [anton, logo] = await Promise.all([
+        loadAsset("/assets/fonts/anton-latin-400-normal.ttf"),
+        loadAsset("/assets/img/logo-ink-pdf.jpg")
+      ]);
+      const pdf = createAssessmentPdf({ ...input, firstName, email, team, overall }, { anton, logo });
       const safeTeam = team.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "team";
       await sendEmail(context.env, {
         to: [leadRecipient],
