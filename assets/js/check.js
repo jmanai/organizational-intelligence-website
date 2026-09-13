@@ -602,6 +602,18 @@
 
   /* Everything the manual email needs, in one object. */
   function buildPayload(r) {
+    var reportDimensions = {};
+    DIMENSIONS.forEach(function (d) {
+      var band = dimensionBand(d.key, r.dimensions[d.key]);
+      reportDimensions[d.key] = {
+        key: d.key,
+        name: d.name,
+        question: stripEntities(d.question),
+        score: r.dimensions[d.key],
+        band: { label: stripEntities(band.label), text: stripEntities(band.text) },
+        questions: d.questions.map(function (q) { return stripEntities(q.leader); })
+      };
+    });
     return {
       respondentType: 'leader',
       submittedAt: new Date().toISOString(),
@@ -621,11 +633,37 @@
       patterns: r.patterns.map(function (p) { return p.id; }),
       primaryPattern: r.primaryPattern ? r.primaryPattern.id : null,
       recommendation: r.recommendation.title,
+      report: {
+        overallText: stripEntities(r.band.text),
+        frictionLabel: r.frictionTied ? r.frictionTied.map(function (f) { return f.name; }).join(' and ') : r.friction.name,
+        dimensions: reportDimensions,
+        primaryPattern: r.primaryPattern ? {
+          title: stripEntities(r.primaryPattern.title),
+          message: stripEntities(r.primaryPattern.message),
+          involves: r.primaryPattern.involves
+        } : null,
+        secondaryPattern: r.secondaryPattern ? {
+          title: stripEntities(r.secondaryPattern.title),
+          message: stripEntities(r.secondaryPattern.message),
+          involves: r.secondaryPattern.involves
+        } : null,
+        recommendation: {
+          title: stripEntities(r.recommendation.title),
+          text: stripEntities(r.recommendation.text),
+          framing: stripEntities(r.recommendation.framing || '')
+        }
+      },
       oneThing: state.context.oneThing || null,
       source: document.referrer || null,
       query: location.search || null,
       summary: buildSummary(r)
     };
+  }
+
+  function stripEntities(value) {
+    var node = document.createElement('textarea');
+    node.innerHTML = String(value || '');
+    return node.value;
   }
 
   /* A plain-text digest, ready to paste into the email. */

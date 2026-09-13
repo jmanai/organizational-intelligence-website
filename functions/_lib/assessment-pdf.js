@@ -1,245 +1,45 @@
-const DIMENSIONS = {
-  MEET: {
-    name: "Meetings",
-    bands: [
-      [75, "Meetings are earning their place", "Protect the system by continuing to question recurring meetings and designing around outcomes."],
-      [50, "Meeting creep", "Some meetings work; others may survive because nobody has challenged them."],
-      [0, "Meeting debt", "Your calendar may be carrying meetings that do not produce enough value for the time they consume."]
-    ],
-    recommendation: ["Better Meetings", "Audit and redesign the meeting landscape: calculate its cost, retire what has stopped earning its place, and improve the meetings worth keeping."]
-  },
-  DECIDE: {
-    name: "Decisions",
-    bands: [
-      [75, "Decisions move", "People generally understand how decisions happen and where authority sits."],
-      [50, "Decision friction", "Consensus, escalation, or unclear ownership may be slowing decisions."],
-      [0, "Decision gridlock", "Too much decision-making may depend on hierarchy, consensus, or figuring out who is allowed to decide."]
-    ],
-    recommendation: ["A decision rights working session", "Make decision-making explicit: who decides what, how each type of decision gets made, what needs consultation, and what stays decided."]
-  },
-  SHARE: {
-    name: "Information",
-    bands: [
-      [75, "Information flows", "People can generally access the context they need without chasing it."],
-      [50, "Information pockets", "Too much information may depend on being in the right meeting, channel, or conversation."],
-      [0, "Information bottlenecks", "Knowledge may be concentrated around individuals, meetings, or leadership, making autonomy difficult."]
-    ],
-    recommendation: ["An information flow working session", "Design how information actually travels: what is visible by default, where work in progress lives, and what people should never have to ask for."]
-  },
-  AGREE: {
-    name: "Agreements",
-    bands: [
-      [75, "Explicit agreements", "Your team has consciously discussed how it wants to work."],
-      [50, "Unwritten rules", "Some expectations are shared; others are learned through observation and interpretation."],
-      [0, "Everyone has their own operating manual", "People may be working from different assumptions about communication, autonomy, responsiveness, and collaboration."]
-    ],
-    recommendation: ["A Team Agreements workshop", "Turn the unwritten rules into real agreements: communication, decisions, autonomy, responsiveness, and what happens when you disagree."]
-  },
-  ALIGN: {
-    name: "Alignment",
-    bands: [
-      [75, "Shared direction", "People understand what matters and can connect everyday work to it."],
-      [50, "Direction with gaps", "Broad direction may be understood, but priorities and trade-offs are not always clear enough to guide everyday decisions."],
-      [0, "Competing maps", "People may be working hard toward different interpretations of what matters."]
-    ],
-    recommendation: ["A strategy and alignment working session", "Build shared direction rather than presenting it: surface assumptions, make trade-offs discussable, and connect everyday work to what matters."]
-  }
-};
-
-const OVERALL_TEXT = {
-  "Deliberately Designed": "Your team has made many conscious choices about how work happens. Keep inspecting the system so today's deliberate choices do not become tomorrow's unquestioned habits.",
-  "Mostly Intentional": "A lot is working, but habit, interpretation, or individual preference may have quietly taken over in a few places. Make the dimensions with the most friction explicit.",
-  "Too Much Left to Chance": "Your team has ways of working, but not enough of them have been chosen deliberately. Good people may be compensating for system friction.",
-  "Running on Defaults": "Work is getting done, but probably harder than it needs to be. Meetings, decisions, information, and collaboration may depend on unwritten rules, hierarchy, and individual habits."
-};
-
-const PATTERNS = {
-  "meeting-not-meeting": ["The meeting problem isn't a meeting problem", "Your meetings may be carrying your decision problem. Before redesigning agendas, examine how authority and decision-making work."],
-  "meeting-is-information-system": ["The meeting is the information system", "You may be meeting because that is how information travels. Improving information flow may remove meetings without a no-meeting policy."],
-  "permission-problem": ["The permission problem", "People may know where they are going but not what they are allowed to decide along the way. Look at decision rights, authority, and escalation."],
-  "ta-da-organization": ["The ta-da organization", "Important things may arrive once finished rather than giving people enough context along the way."],
-  "heroic-team": ["The heroic team", "Your people may be compensating for your system. Capture what is working before it depends entirely on the current people."],
-  "default-operating-system": ["The default operating system", "Do not treat this as five separate fixes. Step back and deliberately design the team's broader ways of working."]
-};
-
 const ORDER = ["MEET", "DECIDE", "SHARE", "AGREE", "ALIGN"];
-const COLORS = { ink: [0.055, 0.055, 0.055], paper: [0.97, 0.96, 0.94], blue: [0.02, 0.31, 0.96], red: [1, 0.27, 0.18], lime: [0.67, 0.94, 0.12], yellow: [1, 0.75, 0.02], cyan: [0.02, 0.78, 0.86], violet: [0.50, 0.12, 0.90] };
+const NAMES = { MEET: "Meet", DECIDE: "Decide", SHARE: "Share", AGREE: "Agree", ALIGN: "Align" };
+const QUESTIONS = { MEET: "Do your meetings earn their place?", DECIDE: "Can decisions actually move?", SHARE: "Does information move?", AGREE: "Have you actually agreed how you'll work together?", ALIGN: "Do people know what they're moving toward?" };
+const OVERALL = {
+  "Deliberately Designed": "Your responses suggest your team has made many conscious choices about how work happens. Keep inspecting the system so today's deliberate choices do not become tomorrow's unquestioned habits.",
+  "Mostly Intentional": "Your responses suggest a lot is working, but habit, interpretation, or individual preference may have quietly taken over in a few places. Find the dimensions with the most friction and make those expectations explicit.",
+  "Too Much Left to Chance": "Your responses suggest your team has ways of working, but not enough of them have been chosen deliberately. Good people may be compensating for system friction.",
+  "Running on Defaults": "Your responses suggest work is getting done, but probably harder than it needs to be. Meetings, decisions, information, and collaboration may depend heavily on unwritten rules, hierarchy, and individual habits."
+};
+const FALLBACK_RECS = {
+  MEET: ["Better Meetings", "Audit and redesign the meeting landscape: calculate its cost, retire what has stopped earning its place, and improve the meetings worth keeping."],
+  DECIDE: ["A decision rights working session", "Make decision-making explicit: who decides what, how each type of decision gets made, what needs consultation, and what stays decided."],
+  SHARE: ["An information flow working session", "Design how information travels: what is visible by default, where work in progress lives, and what people should never have to ask for."],
+  AGREE: ["A Team Agreements workshop", "Turn the unwritten rules into real agreements: communication, decisions, autonomy, responsiveness, and what happens when you disagree."],
+  ALIGN: ["A strategy and alignment working session", "Build shared direction rather than presenting it: surface assumptions, make trade-offs discussable, and connect everyday work to what matters."]
+};
+const C = { ink:[.055,.055,.055], paper:[.98,.975,.965], blue:[.02,.31,.96], red:[1,.27,.18], lime:[.55,.95,0], cyan:[.02,.72,.86], violet:[.5,.12,.9], grey:[.38,.38,.38], line:[.78,.77,.75] };
 
-function ascii(value) {
-  return String(value == null ? "" : value)
-    .replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"')
-    .replace(/[\u2013\u2014]/g, "-").replace(/[^\x20-\x7E]/g, " ");
-}
+function ascii(v) { return String(v == null ? "" : v).replace(/[\u2018\u2019]/g,"'").replace(/[\u201C\u201D]/g,'"').replace(/[\u2013\u2014]/g,"-").replace(/[^\x20-\x7E]/g," "); }
+function esc(v) { return ascii(v).replace(/\\/g,"\\\\").replace(/\(/g,"\\(").replace(/\)/g,"\\)"); }
+function col(rgb, stroke=false) { return `${rgb.join(" ")} ${stroke ? "RG" : "rg"}`; }
+function txt(font,size,x,y,v,rgb=C.ink) { return `BT /${font} ${size} Tf ${col(rgb)} ${x} ${y} Td (${esc(v)}) Tj ET`; }
+function rect(x,y,w,h,rgb,stroke=false,width=1) { return `${col(rgb,stroke)} ${width} w ${x} ${y} ${w} ${h} re ${stroke ? "S" : "f"}`; }
+function rule(x1,y1,x2,y2,rgb=C.ink,width=1) { return `${col(rgb,true)} ${width} w ${x1} ${y1} m ${x2} ${y2} l S`; }
+function wrap(v,max) { const out=[]; let line=""; for(const word of ascii(v).split(/\s+/).filter(Boolean)){ if(!line||`${line} ${word}`.length<=max) line=line?`${line} ${word}`:word; else {out.push(line);line=word;} } if(line)out.push(line); return out; }
+function para(c,v,x,y,max,size=10,leading=14,font="F1",rgb=C.ink,limit=99){ wrap(v,max).slice(0,limit).forEach(row=>{c.push(txt(font,size,x,y,row,rgb));y-=leading;}); return y; }
+function title(c,v,x,y,size=25,max=34,rgb=C.ink){ wrap(v.toUpperCase(),max).forEach(row=>{c.push(txt("F2",size,x,y,row,rgb));y-=size*.92;});return y; }
+function kicker(c,v,x,y,rgb=C.ink){c.push(txt("F3",9,x,y,v.toUpperCase(),rgb));}
+function base(){const c=[rect(0,0,595,842,C.paper),rule(42,808,553,808,C.ink,1.2)];return c;}
+function logo(c,x,y,rgb=C.ink){c.push(txt("F2",12,x,y,"Organizational",rgb),txt("F2",12,x,y-13,"Intelligence",rgb),rect(x+91,y-9,5,5,C.blue),rect(x+98,y-9,5,5,C.red),rect(x+91,y-16,5,5,C.lime),rect(x+98,y-16,5,5,C.violet));}
+function footer(c,n){c.push(txt("F3",8,480,30,`${String(n).padStart(2,"0")} / 07`,C.grey));}
+function dim(data,key){return data.dimensions[key]||{key,name:NAMES[key],question:QUESTIONS[key],score:data.scores[key],band:{label:"Assessment result",text:"This score is a prompt for a conversation about how work happens."},questions:[]};}
 
-function esc(value) {
-  return ascii(value).replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
-}
+function cover(d){const c=base();logo(c,42,776);c.push(txt("F3",9,455,777,d.date.toUpperCase()));kicker(c,"Teams ways of working (WOW) assessment",42,545);let y=title(c,"The How We Work Check",42,505,38,16);c.push(rect(42,y-8,190,22,C.red),txt("F3",9,52,y,d.band.toUpperCase(),C.paper),txt("F2",50,42,y-64,String(d.overall)),txt("F2",18,110,y-52,"/100 overall",[.58,.58,.58]));para(c,d.overallText,42,y-90,70,11,17,"F1",C.ink,7);c.push(rule(42,165,553,165,C.line));kicker(c,"Team assessed",42,148,C.grey);c.push(txt("F2",11,42,130,d.team));kicker(c,"Company",300,148,C.grey);c.push(txt("F2",11,300,130,d.company||d.team),rule(42,112,553,112,C.line));kicker(c,"Completed by",42,95,C.grey);c.push(txt("F2",11,42,77,d.role||d.firstName));kicker(c,"Team size",300,95,C.grey);c.push(txt("F2",11,300,77,d.teamSize||"Not specified"));para(c,"This report reflects one person's answers at one moment. It is a starting point for a conversation, not a measurement of the team.",42,47,82,8,11,"F1",C.grey,2);return{content:c.join("\n")};}
+function overview(d){const c=base();kicker(c,"How to read this",42,785);let y=title(c,"Five things every team does, whether or not it decided how.",42,755,22,39);y=para(c,"Every team meets, decides, shares information, agrees how to work, and aligns on direction. The score is not a grade. It estimates how much of your way of working was designed on purpose, and how much arrived by default.",42,y-5,82,10,15);para(c,"A low score is not a verdict on the people. It usually means capable people are spending energy compensating for a system nobody sat down and built.",42,y-10,82,10,15);c.push(rule(42,520,553,520,C.ink,1.2));kicker(c,"The overall picture",42,498);c.push(txt("F2",48,42,445,String(d.overall)),txt("F2",17,110,456,`/100 - ${d.band}`,[.58,.58,.58]));para(c,d.overallText,42,420,82,10,15);const s=dim(d,d.strength),f=dim(d,d.friction);c.push(rect(42,210,248,120,C.lime),rect(305,210,248,120,C.red));kicker(c,"Your strength",54,307);c.push(txt("F2",15,54,284,`${s.name.toUpperCase()}, AT ${s.score}/100`));para(c,s.band.text,54,262,38,9,13,"F1",C.ink,4);kicker(c,"Your biggest friction",317,307);c.push(txt("F2",13,317,284,`${d.frictionLabel.toUpperCase()} AT ${f.score}/100`));para(c,f.band.text,317,262,38,9,13,"F1",C.ink,4);footer(c,2);return{content:c.join("\n")};}
+function drawDim(c,d,key,y,height){const x=dim(d,key),score=Math.max(0,Math.min(100,Number(x.score)));kicker(c,x.name,42,y);c.push(txt("F2",20,518,y-2,String(score)),txt("F2",8,544,y,"/100",C.grey),rect(42,y-23,511,8,C.paper,true));const color=key===d.friction?C.red:key===d.strength?C.lime:key==="MEET"?C.violet:key==="DECIDE"?C.cyan:C.blue;c.push(rect(42,y-23,511*score/100,8,color),txt("F4",9,42,y-42,x.question,C.grey),txt("F2",9,42,y-60,`${x.band.label}.`));para(c,x.band.text,42,y-75,100,8,10,"F1",C.ink,2);kicker(c,"What we asked",42,y-103,C.grey);let qy=y-120;(x.questions||[]).slice(0,4).forEach(q=>{c.push(txt("F1",7,44,qy,"-",C.grey));qy=para(c,q,54,qy,112,7,9,"F1",C.grey,1)-2;});c.push(rule(42,y-height+8,553,y-height+8,C.line));}
+function dimsPage(d,keys,n){const c=base();if(n===3){kicker(c,"Dimension by dimension",42,785);title(c,"Where the score came from.",42,755,24,30);para(c,"Each dimension is four statements. The questions are shown so you can see exactly what was measured and ask your team the same ones.",42,700,82,9,13,"F1",C.grey);}const start=n===3?640:770,height=n===3?195:250;keys.forEach((k,i)=>drawDim(c,d,k,start-i*height,height));footer(c,n);return{content:c.join("\n")};}
+function patterns(d){const c=base();kicker(c,"What connects them",42,785);let y=title(c,"The scores are symptoms. This is the shape underneath.",42,755,22,35);para(c,"Individual scores show where it hurts. Patterns show how several places may be connected, which is usually the more useful thing to know.",42,y-4,82,10,15);y-=78;[d.primaryPattern,d.secondaryPattern].filter(Boolean).forEach((p,i)=>{c.push(rect(42,y-103,4,112,C.violet));kicker(c,i?"Also showing":"The main pattern",56,y,C.violet);let py=title(c,p.title,56,y-23,16,52);py=para(c,p.message,56,py-2,77,10,14,"F1",C.ink,4);if(p.involves&&p.involves.length)kicker(c,`Drawn from: ${p.involves.map(k=>dim(d,k).name).join(", ")}`,56,py-4,C.grey);y-=135;});if(d.oneThing){c.push(rule(42,y,553,y,C.ink,1.2));kicker(c,"You told us",42,y-22);y=title(c,"The one thing you would change.",42,y-48,20,38);c.push(rect(42,y-60,511,68,C.paper,true,1.2));para(c,`"${d.oneThing}"`,56,y-18,76,11,16,"F1",C.ink,3);}footer(c,5);return{content:c.join("\n")};}
+function recommendation(d){const c=base();kicker(c,"Where we would start",42,785);c.push(rect(42,580,511,170,C.ink));kicker(c,"One intervention, not five",56,724,C.lime);let y=title(c,d.recommendation.title,56,693,24,30,C.paper);y=para(c,d.recommendation.text,56,y-5,72,10,15,"F1",C.paper,4);if(d.recommendation.framing)para(c,d.recommendation.framing,56,y-8,72,10,15,"F1",C.paper,4);para(c,"We recommend one thing on purpose. A report that lists five priorities has not made a choice; it has handed the choice back to you.",42,558,82,9,13,"F1",C.grey);c.push(rule(42,500,553,500,C.ink,1.2));kicker(c,"Before you book anything",42,478);title(c,"Three things worth doing in the next two weeks.",42,450,20,34);const f=dim(d,d.friction),s=dim(d,d.strength);const actions=[["Ask your team the same twenty questions.","The gap between your view and theirs is often the most useful result in the exercise."],[`Choose one ${f.name.toLowerCase()} friction and make it observable.`,"Use the four assessment statements to identify a specific recurring moment where the friction appears."],[`Protect what is working in ${s.name.toLowerCase()}.`,`Name the practice behind your ${s.score}/100 score so it does not depend only on the current people.`]];y=350;actions.forEach((a,i)=>{c.push(txt("F2",10,42,y,`0${i+1}`,C.blue),txt("F2",11,66,y,a[0]));y=para(c,a[1],66,y-19,76,9,13,"F1",C.ink,3)-12;});c.push(rule(42,140,553,140,C.ink,1.2));kicker(c,"What this report is not",42,118);para(c,"It is not a benchmark or a personality assessment. It is one perspective, captured at one moment, on a system that involves everyone. Treat it as the opening of a conversation rather than a conclusion.",42,96,84,9,13,"F1",C.ink,4);footer(c,6);return{content:c.join("\n")};}
+function closing(d){const c=base();kicker(c,"One last thing",42,785);let y=title(c,"The score is not the point.",42,755,27,30);y=para(c,"The point is the conversation it starts. If this report is right, you probably recognized much of it and needed a reason to put it on the table. If it is wrong, that is worth knowing too.",42,y-10,72,11,17);para(c,"Either way, the next move is a conversation with your team, not with us. We are here if you want a hand with it.",42,y-14,72,11,17);c.push(rect(42,120,511,220,C.lime));kicker(c,"What happens next",58,310);y=title(c,"Book your free assessment call.",58,275,25,29);para(c,"Thirty minutes, no pitch. We walk through this report together, you tell us what it got right and what it missed, and you leave with a clearer read on where to start.",58,y-5,65,10,15,"F1",C.ink,5);c.push(rect(58,155,145,38,C.ink),txt("F2",11,72,169,"BOOK THE CALL",C.paper),txt("F3",8,58,136,"OR REPLY TO THE EMAIL THIS ARRIVED WITH"),rect(42,42,511,62,C.ink));logo(c,56,80,C.paper);c.push(txt("F1",8,180,77,"hello@orgintelligence.io",C.paper),txt("F1",8,180,61,"orgintelligence.io",C.paper));footer(c,7);return{content:c.join("\n"),buttonY:155};}
+function annot(box,uri){return`<< /Type /Annot /Subtype /Link /Rect [${box.join(" ")}] /Border [0 0 0] /A << /S /URI /URI (${esc(uri)}) >> >>`;}
+function build(pages){const o=["<< /Type /Catalog /Pages 2 0 R >>","","<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>","<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>","<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold >>","<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Oblique >>"],kids=[];pages.forEach((p,i)=>{const po=o.length+1,co=po+1;kids.push(`${po} 0 R`);if(i===pages.length-1){const a1=co+1,a2=co+2;o.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents ${co} 0 R /Annots [${a1} 0 R ${a2} 0 R] >>`,`<< /Length ${p.content.length} >>\nstream\n${p.content}\nendstream`,annot([58,p.buttonY,203,p.buttonY+38],"https://orgintelligence.io/book"),annot([175,52,310,90],"mailto:hello@orgintelligence.io"));}else{o.push(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R /F4 6 0 R >> >> /Contents ${co} 0 R >>`,`<< /Length ${p.content.length} >>\nstream\n${p.content}\nendstream`);}});o[1]=`<< /Type /Pages /Kids [${kids.join(" ")}] /Count ${pages.length} >>`;let pdf="%PDF-1.4\n%OI-WOW\n",offset=[0];o.forEach((x,i)=>{offset.push(pdf.length);pdf+=`${i+1} 0 obj\n${x}\nendobj\n`;});const xr=pdf.length;pdf+=`xref\n0 ${o.length+1}\n0000000000 65535 f \n`;for(let i=1;i<=o.length;i++)pdf+=`${String(offset[i]).padStart(10,"0")} 00000 n \n`;pdf+=`trailer\n<< /Size ${o.length+1} /Root 1 0 R >>\nstartxref\n${xr}\n%%EOF`;return new TextEncoder().encode(pdf);}
 
-function colour(rgb) { return `${rgb.join(" ")} rg`; }
-
-function wrap(text, maxChars) {
-  const words = ascii(text).split(/\s+/).filter(Boolean);
-  const lines = [];
-  let line = "";
-  for (const word of words) {
-    if (!line || `${line} ${word}`.length <= maxChars) line = line ? `${line} ${word}` : word;
-    else { lines.push(line); line = word; }
-  }
-  if (line) lines.push(line);
-  return lines;
-}
-
-function text(font, size, x, y, value, rgb = COLORS.ink) {
-  return `BT /${font} ${size} Tf ${colour(rgb)} ${x} ${y} Td (${esc(value)}) Tj ET`;
-}
-
-function paragraph(commands, value, x, y, widthChars, size = 10, leading = 14, font = "F1", rgb = COLORS.ink) {
-  for (const line of wrap(value, widthChars)) {
-    commands.push(text(font, size, x, y, line, rgb));
-    y -= leading;
-  }
-  return y;
-}
-
-function rect(x, y, w, h, rgb, stroke = false) {
-  return `${colour(rgb)} ${x} ${y} ${w} ${h} re ${stroke ? "S" : "f"}`;
-}
-
-function bandFor(key, pct) {
-  return DIMENSIONS[key].bands.find(([min]) => pct >= min);
-}
-
-function pageOne(data) {
-  const c = [];
-  c.push(rect(0, 0, 595, 842, COLORS.paper));
-  c.push(rect(0, 650, 595, 192, COLORS.ink));
-  c.push(text("F2", 20, 42, 800, "Organizational", COLORS.paper));
-  c.push(text("F2", 20, 42, 778, "Intelligence", COLORS.paper));
-  c.push(rect(173, 780, 7, 7, COLORS.blue)); c.push(rect(182, 780, 7, 7, COLORS.red));
-  c.push(rect(173, 771, 7, 7, COLORS.lime)); c.push(rect(182, 771, 7, 7, COLORS.violet));
-  c.push(text("F3", 9, 42, 720, "WOW ASSESSMENT REPORT", COLORS.yellow));
-  const teamSize = data.team.length <= 30 ? 29 : data.team.length <= 42 ? 22 : 17;
-  c.push(text("F2", teamSize, 42, 682, data.team.slice(0, 55), COLORS.paper));
-  c.push(text("F2", 21, 42, 620, data.band, COLORS.ink));
-  c.push(text("F2", 66, 445, 596, String(data.overall), COLORS.blue));
-  c.push(text("F1", 10, 530, 599, "/100", COLORS.ink));
-  paragraph(c, OVERALL_TEXT[data.band] || "A snapshot of how deliberately your team's everyday work is designed.", 42, 592, 76, 11, 16);
-  c.push(text("F3", 10, 42, 522, "THE FIVE DIMENSIONS", COLORS.ink));
-
-  const barColours = [COLORS.blue, COLORS.violet, COLORS.cyan, COLORS.yellow, COLORS.lime];
-  let y = 488;
-  ORDER.forEach((key, index) => {
-    const score = data.percentages[key];
-    const info = bandFor(key, score);
-    const isLow = key === data.friction;
-    const isHigh = key === data.strength;
-    const barColour = isLow && !isHigh ? COLORS.red : isHigh && !isLow ? COLORS.lime : barColours[index];
-    c.push(text("F2", 12, 42, y + 8, DIMENSIONS[key].name, COLORS.ink));
-    c.push(text("F2", 12, 500, y + 8, `${score}/100`, COLORS.ink));
-    c.push(rect(150, y + 5, 330, 8, [0.84, 0.83, 0.81]));
-    c.push(rect(150, y + 5, 330 * score / 100, 8, barColour));
-    c.push(text("F1", 9, 150, y - 10, info[1], COLORS.ink));
-    y -= 56;
-  });
-
-  c.push(rect(42, 108, 245, 100, [0.91, 0.96, 0.80]));
-  c.push(text("F3", 9, 56, 186, "YOUR STRENGTH", COLORS.ink));
-  c.push(text("F2", 18, 56, 160, DIMENSIONS[data.strength].name, COLORS.ink));
-  paragraph(c, bandFor(data.strength, data.percentages[data.strength])[2], 56, 140, 42, 9, 12);
-  c.push(rect(308, 108, 245, 100, [1, 0.89, 0.86]));
-  c.push(text("F3", 9, 322, 186, "YOUR BIGGEST FRICTION", COLORS.ink));
-  c.push(text("F2", 18, 322, 160, DIMENSIONS[data.friction].name, COLORS.ink));
-  paragraph(c, bandFor(data.friction, data.percentages[data.friction])[2], 322, 140, 42, 9, 12);
-  c.push(text("F1", 8, 42, 52, "A reflection prompt, not a measure of organizational effectiveness.", [0.35, 0.35, 0.35]));
-  c.push(text("F3", 8, 504, 52, "01 / 02", [0.35, 0.35, 0.35]));
-  return c.join("\n");
-}
-
-function pageTwo(data) {
-  const c = [];
-  c.push(rect(0, 0, 595, 842, COLORS.paper));
-  c.push(rect(0, 792, 595, 50, COLORS.ink));
-  c.push(text("F2", 16, 42, 811, "Organizational Intelligence", COLORS.paper));
-  c.push(text("F3", 9, 42, 754, "WHAT THE RESULTS SUGGEST", COLORS.ink));
-  let y = 716;
-  const primary = PATTERNS[data.primaryPattern] || data.patterns.map((id) => PATTERNS[id]).find(Boolean);
-  if (primary) {
-    c.push(rect(42, y - 112, 511, 132, COLORS.ink));
-    c.push(text("F3", 9, 60, y - 2, "THE PATTERN WE'D LOOK AT", COLORS.lime));
-    c.push(text("F2", 20, 60, y - 32, primary[0], COLORS.paper));
-    paragraph(c, primary[1], 60, y - 58, 76, 10, 14, "F1", COLORS.paper);
-    y -= 164;
-  }
-  const rec = DIMENSIONS[data.friction].recommendation;
-  c.push(rect(42, y - 150, 511, 170, [0.89, 0.92, 1]));
-  c.push(rect(42, y - 150, 8, 170, COLORS.blue));
-  c.push(text("F3", 9, 64, y - 4, "WHERE WE'D START", COLORS.blue));
-  c.push(text("F2", 21, 64, y - 36, rec[0], COLORS.ink));
-  let py = paragraph(c, rec[1], 64, y - 64, 72, 11, 16);
-  paragraph(c, `Based on ${DIMENSIONS[data.friction].name} being the lowest-scoring dimension${primary ? ", read alongside the pattern above" : ""}.`, 64, py - 12, 78, 9, 13, "F1", [0.35, 0.35, 0.35]);
-  y -= 196;
-  if (data.oneThing) {
-    c.push(rect(42, y - 92, 511, 112, [1, 0.95, 0.78]));
-    c.push(text("F3", 9, 60, y - 2, "THE ONE THING YOU'D CHANGE", COLORS.ink));
-    paragraph(c, `"${data.oneThing}"`, 60, y - 30, 75, 12, 17, "F1", COLORS.ink);
-    y -= 136;
-  }
-  c.push(text("F3", 9, 42, y, "WHAT HAPPENS NEXT", COLORS.ink));
-  c.push(text("F2", 22, 42, y - 34, "Turn the insight into a better way of working.", COLORS.ink));
-  paragraph(c, "A 30-minute conversation can help make sense of the result, test what is really creating friction, and choose a practical place to begin.", 42, y - 62, 80, 11, 16);
-  const buttonY = y - 145;
-  c.push(rect(42, buttonY, 210, 38, COLORS.blue));
-  c.push(text("F2", 11, 61, buttonY + 14, "BOOK A FREE CONSULTATION", COLORS.paper));
-  c.push(text("F1", 10, 42, 52, "hello@orgintelligence.io  |  orgintelligence.io", COLORS.ink));
-  c.push(text("F1", 9, 42, 34, `Prepared for ${data.firstName} | ${data.email}`, [0.35, 0.35, 0.35]));
-  c.push(text("F3", 8, 504, 34, "02 / 02", [0.35, 0.35, 0.35]));
-  return { content: c.join("\n"), buttonY };
-}
-
-function linkAnnotation(rectangle, uri) {
-  return `<< /Type /Annot /Subtype /Link /Rect [${rectangle.join(" ")}] /Border [0 0 0] /A << /S /URI /URI (${esc(uri)}) >> >>`;
-}
-
-function buildPdf(firstPage, secondPage) {
-  const objects = [
-    "<< /Type /Catalog /Pages 2 0 R >>",
-    "<< /Type /Pages /Kids [6 0 R 8 0 R] /Count 2 >>",
-    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>",
-    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
-    "<< /Type /Font /Subtype /Type1 /BaseFont /Courier-Bold >>",
-    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 7 0 R >>",
-    `<< /Length ${firstPage.length} >>\nstream\n${firstPage}\nendstream`,
-    "<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R /F3 5 0 R >> >> /Contents 9 0 R /Annots [10 0 R 11 0 R] >>",
-    `<< /Length ${secondPage.content.length} >>\nstream\n${secondPage.content}\nendstream`,
-    linkAnnotation([42, secondPage.buttonY, 252, secondPage.buttonY + 38], "https://orgintelligence.io/book"),
-    linkAnnotation([42, 45, 170, 64], "mailto:hello@orgintelligence.io")
-  ];
-  let pdf = "%PDF-1.4\n%OI-WOW\n";
-  const offsets = [0];
-  objects.forEach((object, index) => { offsets.push(pdf.length); pdf += `${index + 1} 0 obj\n${object}\nendobj\n`; });
-  const xref = pdf.length;
-  pdf += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
-  for (let i = 1; i <= objects.length; i++) pdf += `${String(offsets[i]).padStart(10, "0")} 00000 n \n`;
-  pdf += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
-  return new TextEncoder().encode(pdf);
-}
-
-export function createAssessmentPdf(input) {
-  const data = {
-    firstName: ascii(input.firstName).slice(0, 100), email: ascii(input.email).slice(0, 254),
-    team: ascii(input.team).slice(0, 80), overall: Number(input.overall), band: ascii(input.overallBand).slice(0, 100),
-    percentages: Object.fromEntries(ORDER.map((key) => [key, Number(input.dimensionPercentages[key])])),
-    strength: ORDER.includes(input.strength) ? input.strength : ORDER[0],
-    friction: ORDER.includes(input.friction) ? input.friction : ORDER[0],
-    patterns: Array.isArray(input.patterns) ? input.patterns.slice(0, 2) : [],
-    primaryPattern: ascii(input.primaryPattern).slice(0, 100),
-    oneThing: ascii(input.oneThing).slice(0, 360)
-  };
-  return buildPdf(pageOne(data), pageTwo(data));
-}
-
-export function bytesToBase64(bytes) {
-  let binary = "";
-  for (let i = 0; i < bytes.length; i += 0x8000) binary += String.fromCharCode(...bytes.subarray(i, i + 0x8000));
-  return btoa(binary);
-}
+export function createAssessmentPdf(input){const report=input.report||{},scores=Object.fromEntries(ORDER.map(k=>[k,Number(input.dimensionPercentages[k])]));const rec=report.recommendation||{title:FALLBACK_RECS[input.friction||"MEET"][0],text:FALLBACK_RECS[input.friction||"MEET"][1]};const d={firstName:ascii(input.firstName).slice(0,100),email:ascii(input.email).slice(0,254),team:ascii(input.team).slice(0,80)||"Your team",company:ascii(input.company).slice(0,100),role:ascii(input.role).slice(0,100),teamSize:ascii(input.teamSize).slice(0,50),date:ascii(report.date||new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric",timeZone:"UTC"})),overall:Number(input.overall),band:ascii(input.overallBand).slice(0,100),overallText:ascii(report.overallText||OVERALL[input.overallBand]||"A snapshot of how deliberately your team's work is designed."),scores,strength:ORDER.includes(input.strength)?input.strength:"MEET",friction:ORDER.includes(input.friction)?input.friction:"MEET",frictionLabel:ascii(report.frictionLabel||NAMES[input.friction]||"Friction"),primaryPattern:report.primaryPattern||null,secondaryPattern:report.secondaryPattern||null,recommendation:rec,oneThing:ascii(input.oneThing).slice(0,500),dimensions:report.dimensions||{}};ORDER.forEach(k=>{if(d.dimensions[k])d.dimensions[k].score=scores[k];});return build([cover(d),overview(d),dimsPage(d,ORDER.slice(0,3),3),dimsPage(d,ORDER.slice(3),4),patterns(d),recommendation(d),closing(d)]);}
+export function bytesToBase64(bytes){let binary="";for(let i=0;i<bytes.length;i+=0x8000)binary+=String.fromCharCode(...bytes.subarray(i,i+0x8000));return btoa(binary);}

@@ -53,7 +53,10 @@ Cloudflare Pages Functions provide these same-origin routes:
 
 - `POST /api/contact` sends the consultation enquiry to the configured inbox.
 - `POST /api/assessment` sends the visitor's report and a lead notification. The
-  internal notification includes a branded PDF with the full assessment result.
+  internal notification includes a seven-page branded PDF modeled on the approved
+  sample report. Its dimension narratives, questions, bands, patterns, ties, and
+  recommendation are supplied by the assessment engine in the submission payload,
+  keeping the on-screen result and PDF interpretation aligned.
 - `POST /api/newsletter` records a newsletter signup in HubSpot.
 
 All three routes submit their successful lead capture to dedicated HubSpot
