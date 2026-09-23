@@ -44,7 +44,8 @@ The site is designed for Cloudflare Pages with Git integration:
 The Cloudflare production hostname is
 `organizational-intelligence-website.pages.dev` until the custom domain is attached.
 
-There is no build command. Set the Pages build output directory to `/` (the
+Set the Pages build command to `if [ -f package-lock.json ]; then npm ci --ignore-scripts; fi` so the PDF dependencies
+are installed before Functions are bundled. Set the build output directory to `/` (the
 repository root). The `_routes.json` file ensures only `/api/*` requests invoke
 Pages Functions; all static files remain on the unlimited static asset path.
 
@@ -442,5 +443,8 @@ lead notification. The respondent continues to receive the existing email summar
 - `python3 tools/check-assessment-pdf.py` verifies every expected text fragment,
   page bounds and links in those test outputs (requires `pypdf` and `pdfplumber`).
 
-Cloudflare Pages installs the dependencies from `package-lock.json` before
-bundling Functions; the static build output remains the repository root.
+The Cloudflare Pages build command must be `if [ -f package-lock.json ]; then npm ci --ignore-scripts; fi`. A blank
+build command skips dependency installation and cannot bundle the PDF function.
+The static build output remains the repository root.
+
+The conditional keeps older branches without a package lock deployable.
