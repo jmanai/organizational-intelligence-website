@@ -409,3 +409,15 @@ ever changes. Never composite a supplied near-miss yellow next to the real one.
 **The About page opens on the definition.** The old page head is gone and the
 definition section was absorbed into it, so the argument is made once. About's
 H1 is now the company name.
+
+
+## Automatic latest podcast episode
+
+The podcast page requests `/api/podcast`, a Cloudflare Pages Function that reads
+the Buzzsprout RSS feed and selects the newest published episode by publication
+date. Feed and endpoint caching use five-minute lifetimes. The saved episode
+loads immediately and remains available if the feed fails. No scheduled job or
+manual episode update is required after deployment.
+
+Use `npx wrangler pages dev . --port 8000` to preview the live endpoint locally;
+a plain static HTTP server only supports the saved fallback.

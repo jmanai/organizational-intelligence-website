@@ -1,18 +1,5 @@
-/* Latest-episode block.
- *
- * Reads assets/data/episodes.json — same origin, so no CORS problem. The
- * Buzzsprout feed itself cannot be read from a browser (it sends no
- * Access-Control-Allow-Origin header), which is why the data is fetched at
- * build time by tools/fetch-episodes.js instead.
- *
- * If a live endpoint is ever configured — a serverless function proxying the
- * feed with CORS headers — put its URL in data-feed-endpoint on the block and
- * it will be preferred, with the JSON as the fallback. That is the whole
- * upgrade: no other change needed.
- *
- * The markup already contains a hand-written episode. That is the no-JS state
- * and the failure state: if the fetch fails, the visitor still sees a real
- * episode rather than an empty box.
+/* Fetch the latest published RSS episode through our same-origin endpoint.
+ * Saved data and HTML keep the player available if the feed is unavailable.
  */
 (function () {
   var block = document.getElementById('latest-episode');
@@ -170,11 +157,10 @@
     });
   }
 
-  /* The single-file preview inlines the data rather than serving a URL, so an
-     inline object wins if one is present. Harmless on the real site. */
+  /* Show the saved episode immediately, then refresh from the live feed. */
   if (window.__oiEpisodes && window.__oiEpisodes.episodes && window.__oiEpisodes.episodes.length) {
     render(window.__oiEpisodes.episodes[0]);
-    return;
+    if (!endpoint || window.location.protocol === 'file:') return;
   }
 
   (function attempt(i) {
