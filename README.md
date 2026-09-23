@@ -1,8 +1,9 @@
 # Organizational Intelligence — website
 
 A static site built from `Organizational_Intelligence_Website_Build_Brief.docx` and
-`OIStyleGuide.pdf`. No build step, no dependencies, no framework. Open `index.html`
-in a browser and it runs.
+`OIStyleGuide.pdf`. The static pages have no build step or framework. Open `index.html` in a browser
+to preview them. The assessment PDF function uses `pdf-lib` and Fontkit; run
+`npm ci` before running the Cloudflare Pages Functions locally.
 
 ---
 
@@ -53,10 +54,11 @@ Cloudflare Pages Functions provide these same-origin routes:
 
 - `POST /api/contact` sends the consultation enquiry to the configured inbox.
 - `POST /api/assessment` sends the visitor's report and a lead notification. The
-  internal notification includes a seven-page branded PDF modeled on the approved
+  internal notification includes a branded PDF modeled on the approved
   sample report. Its dimension narratives, questions, bands, patterns, ties, and
   recommendation are supplied by the assessment engine in the submission payload,
-  keeping the on-screen result and PDF interpretation aligned.
+  keeping the on-screen result and PDF interpretation aligned. The standard report
+  is seven pages; longer answers continue onto additional pages without truncation.
 - `POST /api/newsletter` records a newsletter signup in HubSpot.
 
 All three routes submit their successful lead capture to dedicated HubSpot
@@ -421,3 +423,24 @@ manual episode update is required after deployment.
 
 Use `npx wrangler pages dev . --port 8000` to preview the live endpoint locally;
 a plain static HTTP server only supports the saved fallback.
+
+
+## Assessment PDF layout and checks
+
+The PDF renderer embeds the Anton, Archivo and Courier Prime brand fonts and
+uses measured text widths and flowing sections. It preserves all twenty
+questions, band narratives, both applicable patterns, recommendation framing,
+and the complete free-text answer. Missing report content or required assets
+causes an explicit error rather than silently generating a partial report.
+The PDF is generated before integration calls, and attached to the internal
+lead notification. The respondent continues to receive the existing email summary.
+
+- `npm run preview:pdf` generates `output/pdf/WOW-Assessment-Report-Corrected.pdf`
+  from the real assessment engine and synthetic sample details.
+- `npm run test:pdf` tests score bands, long answers and the actual email
+  attachment payload with external integrations intercepted. It sends no email.
+- `python3 tools/check-assessment-pdf.py` verifies every expected text fragment,
+  page bounds and links in those test outputs (requires `pypdf` and `pdfplumber`).
+
+Cloudflare Pages installs the dependencies from `package-lock.json` before
+bundling Functions; the static build output remains the repository root.

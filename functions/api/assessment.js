@@ -2,7 +2,7 @@ import {
   assertSameOrigin, clean, escapeHtml, handleError, HttpError, json, readJson,
   sendEmail, submitHubSpotForm, validEmail, verifyTurnstile
 } from "../_lib/common.js";
-import { bytesToBase64, createAssessmentPdf } from "../_lib/assessment-pdf.js";
+import { bytesToBase64, createAssessmentPdf, validateAssessmentReport } from "../_lib/assessment-pdf.js";
 
 // Keep these keys aligned with the assessment engine in assets/js/check.js.
 // The browser submits the public result object's dimension map unchanged.
@@ -27,6 +27,8 @@ export async function onRequestPost(context) {
         throw new HttpError(400, "The assessment scores are invalid.");
       }
     }
+    try { validateAssessmentReport(input); }
+    catch { throw new HttpError(400, "The assessment report is incomplete. Please refresh and try again."); }
     await verifyTurnstile(context.request, context.env, clean(input.turnstileToken, 2048));
 
     const labels = { MEET: "Meetings", DECIDE: "Decisions", SHARE: "Information", AGREE: "Agreements", ALIGN: "Alignment" };
@@ -44,6 +46,31 @@ export async function onRequestPost(context) {
       `Recommended place to start: ${recommendation}`
     ].join("\n");
 
+    let attachments;
+    const leadRecipient = context.env.CONTACT_TO_EMAIL;
+    if (leadRecipient && validEmail(leadRecipient)) {
+      const loadAsset = async (path) => {
+        if (!context.env.ASSETS) return null;
+        const response = await context.env.ASSETS.fetch(new URL(path, context.request.url));
+        return response.ok ? new Uint8Array(await response.arrayBuffer()) : null;
+      };
+      const [anton, archivo, archivoBold, courier, logoInk, logoLight] = await Promise.all([
+        loadAsset("/assets/fonts/anton-latin-400-normal.ttf"),
+        loadAsset("/assets/fonts/archivo-latin-400-normal.ttf"),
+        loadAsset("/assets/fonts/archivo-latin-700-normal.ttf"),
+        loadAsset("/assets/fonts/courier-prime-latin-400-normal.ttf"),
+        loadAsset("/assets/img/logo-ink.png"),
+        loadAsset("/assets/img/logo-light.png")
+      ]);
+      const pdf = await createAssessmentPdf({ ...input, firstName, email, team, overall }, { anton, archivo, archivoBold, courier, logoInk, logoLight });
+      const safeTeam = team.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "team";
+      attachments = [{
+        filename: `wow-assessment-${safeTeam}.pdf`,
+        content: bytesToBase64(pdf),
+        content_type: "application/pdf"
+      }];
+    }
+
     await submitHubSpotForm(context.env, context.env.HUBSPOT_ASSESSMENT_FORM_ID, [
       { name: "email", value: email },
       { name: "firstname", value: firstName },
@@ -60,30 +87,13 @@ export async function onRequestPost(context) {
       text: `Hi ${firstName},\n\nHere is the result you requested.\n\n${summary}\n\nReply to this email if you would like to talk through it.`
     });
 
-    const leadRecipient = context.env.CONTACT_TO_EMAIL;
-    if (leadRecipient && validEmail(leadRecipient)) {
-      const loadAsset = async (path) => {
-        if (!context.env.ASSETS) return null;
-        const response = await context.env.ASSETS.fetch(new URL(path, context.request.url));
-        return response.ok ? new Uint8Array(await response.arrayBuffer()) : null;
-      };
-      const [anton, logoInk, logoLight] = await Promise.all([
-        loadAsset("/assets/fonts/anton-latin-400-normal.ttf"),
-        loadAsset("/assets/img/logo-ink-pdf.jpg"),
-        loadAsset("/assets/img/logo-light-pdf.jpg")
-      ]);
-      const pdf = createAssessmentPdf({ ...input, firstName, email, team, overall }, { anton, logoInk, logoLight });
-      const safeTeam = team.replace(/[^a-z0-9]+/gi, "-").replace(/^-|-$/g, "").toLowerCase() || "team";
+    if (attachments) {
       await sendEmail(context.env, {
         to: [leadRecipient],
         reply_to: email,
         subject: `New assessment lead — ${team}`,
         text: `${firstName} <${email}> completed an assessment.\n\n${summary}\n\nRole: ${clean(input.role, 200)}\nWhatsApp: ${clean(input.whatsapp, 100) || "—"}\nOne thing: ${clean(input.oneThing, 2000) || "—"}\n\nThe complete branded report is attached.`,
-        attachments: [{
-          filename: `wow-assessment-${safeTeam}.pdf`,
-          content: bytesToBase64(pdf),
-          content_type: "application/pdf"
-        }]
+        attachments
       });
     }
 
