@@ -158,6 +158,45 @@ const GAP_CASES = [
     else { fail++; failures.push(`✗ ${s.key} shape wrong: ${JSON.stringify(s)}`); }
   });
 
+  // Exercise the real reveal form: it must send the complete report, even
+  // without the optional WhatsApp number. Intercept outbound submissions.
+  const { validateAssessmentReport } = await import('./functions/_lib/assessment-pdf.js');
+  for (const phone of ['', '+971500000000']) {
+    let captured;
+    await page.route('**/api/assessment', async route => {
+      captured = route.request().postDataJSON();
+      try {
+        validateAssessmentReport(captured);
+        await route.fulfill({ status: 200, contentType: 'application/json', body: '{"ok":true}' });
+      } catch (error) {
+        await route.fulfill({ status: 400, contentType: 'application/json', body: JSON.stringify({ error: error.message }) });
+      }
+    });
+    try {
+      await page.goto(BASE + 'how-we-work-check.html');
+      await page.locator('#check input[name="team"]').fill('QA review team');
+      await page.locator('#check select[name="teamSize"]').selectOption({ index: 2 });
+      await page.locator('#check button[type="submit"]').click();
+      for (const key of ['MEET', 'DECIDE', 'SHARE', 'AGREE', 'ALIGN']) {
+        for (let i = 0; i < 4; i++) await page.locator(`input[name="${key}-${i}"][value="2"]`).check();
+        await page.locator('#check button[type="submit"]').click();
+      }
+      await page.locator('#check input[name="firstName"]').fill('QA');
+      await page.locator('#check input[name="email"]').fill('qa@example.com');
+      await page.locator('#check input[name="whatsapp"]').fill(phone);
+      await page.locator('#check button[type="submit"]').click();
+      await page.locator('#check .bar__track').first().waitFor({ timeout: 5000 });
+      if (captured.whatsapp !== (phone || null)) throw new Error('Optional phone value changed');
+      if (Object.values(captured.report.dimensions).flatMap(d => d.questions).length !== 20) throw new Error('Report questions missing');
+      pass++;
+      console.log(`✓ reveal form sends complete report (${phone ? 'with' : 'without'} WhatsApp)`);
+    } catch (error) {
+      fail++; failures.push('✗ reveal form: ' + error.message);
+    } finally {
+      await page.unroute('**/api/assessment');
+    }
+  }
+
   if (consoleErrors.length) { fail++; failures.push('✗ page errors: ' + consoleErrors.join(' | ')); }
 
   console.log('\n' + '-'.repeat(60));

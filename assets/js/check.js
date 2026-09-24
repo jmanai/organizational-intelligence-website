@@ -899,33 +899,12 @@
       }
       err.hidden = true;
 
-      /* The payload the CRM / automation layer needs — §13 column list. */
-      var payload = {
-        respondentType: 'leader',
-        team: state.context.team,
-        teamSize: state.context.teamSize,
-        firstName: form.firstName.value.trim(),
-        email: email,
-        company: emailDomain(email),
-        role: state.context.role || '',
-        whatsapp: form.whatsapp.value.trim() || null,
-        dimensionPercentages: r.dimensions,
-        overall: r.overall,
-        overallBand: r.band.label,
-        strength: r.strength.key,
-        friction: r.friction.key,
-        patterns: r.patterns.map(function (p) { return p.id; }),
-        primaryPattern: r.primaryPattern ? r.primaryPattern.id : null,
-        recommendation: r.recommendation.title,
-        oneThing: state.context.oneThing || null,
-        source: document.referrer || null,
-        query: location.search || null
-      };
-
-      /* Keep context in step so the digest and result render see it. */
-      state.context.firstName = payload.firstName;
-      state.context.email     = payload.email;
-      state.context.whatsapp  = payload.whatsapp;
+      /* Use the same complete report payload as the results view and PDF tests. */
+      state.context.firstName = form.firstName.value.trim();
+      state.context.email = email;
+      state.context.company = emailDomain(email);
+      state.context.whatsapp = form.whatsapp.value.trim() || null;
+      var payload = buildPayload(r);
 
       var endpoint = form.getAttribute('data-endpoint');
       document.dispatchEvent(new CustomEvent('oi:lead', { detail: payload }));
