@@ -458,7 +458,11 @@ The server validates every required answer, exact dropdown values and format con
 then submits the application to HubSpot and emails every answer to `hello@orgintelligence.io`
 using the existing Resend integration (`RESEND_API_KEY` and `EMAIL_FROM`). The subject is
 `Better Together form — <company>`, the body identifies the `better-together` form,
-and Reply-To is the applicant's email address. No marketing subscription is requested.
+and Reply-To is the applicant's email address. A separate personalized confirmation goes
+to the applicant, acknowledges receipt, and says someone will be in touch soon. It
+clarifies that the two teams are still to be selected, and replies go to
+`hello@orgintelligence.io`. Both emails include HTML and plain-text versions.
+No marketing subscription is requested.
 
 HubSpot setup completed on 2026-09-25 in account **46983756**:
 - Published form: **Better Together — Complimentary Workshop Application**.

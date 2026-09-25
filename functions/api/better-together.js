@@ -73,6 +73,21 @@ export async function onRequestPost({ request, env }) {
       html: `<h1>New Better Together workshop application</h1><p>This application came from the better-together form.</p><table>${htmlRows}</table>`,
       text: `New Better Together workshop application\nThis application came from the better-together form.\n\n${rows.map(([label, value]) => `${label}: ${value}`).join('\n\n')}`
     });
+    const confirmation = [
+      `Hi ${values.firstName},`,
+      'Thank you for applying for Better Together, One Brick at a Time, and for taking the time to tell us about your team.',
+      'We’ve received your application. Someone from Organizational Intelligence will review it personally and be in touch soon about the next steps.',
+      'We’re offering two complimentary workshop places for teams. We’ll let you know the outcome once the teams have been selected.',
+      'If you have any questions in the meantime, simply reply to this email. We’d be happy to hear from you.',
+      'Warm regards,\nThe Organizational Intelligence team'
+    ];
+    await sendEmail(env, {
+      to: [values.email],
+      reply_to: 'hello@orgintelligence.io',
+      subject: 'We’ve received your Better Together application',
+      html: `<div style="max-width:600px;margin:0 auto;padding:32px 24px;font-family:Arial,sans-serif;color:#111;line-height:1.6"><p style="font-size:13px;font-weight:bold;letter-spacing:1px">ORGANIZATIONAL INTELLIGENCE</p><h1 style="font-size:28px;line-height:1.2;border-bottom:4px solid #f1cb43;padding-bottom:16px">Thank you for telling us about your team.</h1>${confirmation.map(paragraph => `<p style="white-space:pre-line">${escapeHtml(paragraph)}</p>`).join('')}</div>`,
+      text: confirmation.join('\n\n')
+    });
     return json({ ok: true });
   } catch (error) {
     return handleError(error);
