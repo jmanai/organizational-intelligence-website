@@ -4,7 +4,8 @@
   "scripts": {
     "test:pdf": "node tools/test-assessment-pdf.mjs",
     "preview:pdf": "node tools/preview-assessment.mjs",
-    "test:podcast": "node tools/test-podcast.mjs"
+    "test:podcast": "node tools/test-podcast.mjs",
+    "test:workshop": "node tools/test-better-together.mjs"
   },
   "dependencies": {
     "@pdf-lib/fontkit": "^1.1.1",

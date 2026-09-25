@@ -1,0 +1,393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Better Together, One Brick at a Time | Organizational Intelligence</title>
+<meta name="description" content="A complimentary LEGO® SERIOUS PLAY® workshop for teams in the UAE. Two team places only. Apply now.">
+<link rel="canonical" href="https://orgintelligence.io/better-together">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Better Together, One Brick at a Time">
+<meta property="og:description" content="A complimentary LEGO® SERIOUS PLAY® workshop for teams. Two places only.">
+<meta property="og:image" content="/assets/img/og-lsp.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="assets/css/fonts.css">
+<link rel="stylesheet" href="assets/css/oi.css">
+<style>
+  /* Landing page: the copy, then the form. Site-width margins via .wrap; builds on oi.css tokens. */
+  .lp-bar{ border-bottom:var(--rule); padding-block:1rem; }
+  .lp-bar .logo__img{ height:40px; width:auto; }
+
+  /* Header: one column */
+  .lp-hero{ padding-block:clamp(2rem,4vw,3.25rem); border-bottom:var(--rule); position:relative; overflow:hidden; }
+  .lp-hero .kicker{ margin-bottom:1rem; }
+  .lp-hero h1{ font-size:var(--d3); line-height:.95; max-width:none; }
+  .lp-hero .sub{ font-family:var(--display); font-size:var(--d5); line-height:1.1; margin:.6rem 0 0; }
+  .lp-hero .btn-row{ margin-top:1.5rem; }
+  .lp-tag{ font-family:var(--mono); font-size:var(--a2); font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+
+  /* Top line: readable size, not a micro-label */
+  .lp-eyebrow{ font-family:var(--ui); font-weight:600; font-size:clamp(1.1rem,1.7vw,1.4rem); line-height:1.3; margin:0 0 .9rem; max-width:none; }
+
+  /* "Complimentary / Apply now" sticker: square, tilted, hard shadow (brand rule 5) */
+  .lp-sticker{
+    position:absolute; z-index:2; top:50%; right:clamp(4rem,8vw,9rem);
+    transform:translateY(-50%) rotate(-6deg);
+    display:block; text-align:center; text-decoration:none; color:var(--ink);
+    background:var(--yellow); border:var(--rule); box-shadow:var(--shadow);
+    padding:1rem 1.5rem 1.1rem; transition:transform .15s ease, box-shadow .15s ease;
+  }
+  .lp-sticker:hover{ color:var(--ink); transform:translateY(-50%) rotate(-3deg) scale(1.03); }
+  .lp-sticker__small{ display:block; font-family:var(--mono); font-size:var(--a2); font-weight:700; letter-spacing:.14em; text-transform:uppercase; }
+  .lp-sticker__big{ display:block; font-family:var(--display); font-size:clamp(1.9rem,3vw,2.6rem); line-height:1; margin:.3rem 0 .35rem; }
+  .lp-sticker__cta{ display:inline-block; font-family:var(--ui); font-weight:700; font-size:var(--r2); border-bottom:2px solid var(--ink); }
+  @media (max-width:900px){
+    .lp-sticker{ position:static; transform:rotate(-3deg); display:inline-block; margin-top:1.75rem; }
+    .lp-sticker:hover{ transform:rotate(-1deg); }
+  }
+
+  /* LEGO sprinkles: margin-only, hidden where they'd crowd the copy */
+  .lp-bricks{ position:absolute; inset:0; pointer-events:none; overflow:hidden; z-index:0; }
+  .lp-bricks img{ position:absolute; width:clamp(40px,3.6vw,64px); }
+  .lp-hero > .wrap,.lp-copy > .wrap{ position:relative; z-index:1; }
+  @media (max-width:1180px){ .lp-bricks{ display:none; } }
+
+  /* Copy: label + brick on the left, text on the right, one row per section */
+  .lp-copy{ padding-block:clamp(2rem,4vw,3rem); position:relative; overflow:hidden; }
+  .lp-intro{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.4fr); gap:clamp(1.5rem,4vw,3.5rem); align-items:center; margin-bottom:clamp(1.5rem,3vw,2.25rem); }
+  .lp-photo{ margin:0; border:var(--rule); box-shadow:var(--shadow-sm); }
+  .lp-photo img{ width:100%; }
+  .lp-row{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2.6fr); gap:clamp(1rem,3vw,3rem); padding-block:clamp(1.1rem,2vw,1.5rem); border-top:var(--rule-hair); }
+  .lp-row h2{
+    font-family:var(--mono); font-size:var(--a2); font-weight:700; letter-spacing:.14em;
+    text-transform:uppercase; line-height:1.4; margin:0;
+    display:flex; align-items:center; gap:.7rem; align-self:start;
+  }
+  .lp-row h2 img{ width:32px; height:32px; object-fit:contain; flex:none; }
+  .lp-copy p{ max-width:78ch; margin-bottom:.6em; }
+  .lp-copy .question{ font-family:var(--display); font-size:var(--d4); line-height:1.05; margin:0 0 .6rem; max-width:none; }
+  .lp-copy .punch{ font-family:var(--display); font-size:var(--d5); line-height:1.15; }
+  .lp-copy ul{ padding-left:1.25rem; margin:0 0 .6em; columns:2; column-gap:2.5rem; }
+  .lp-copy li{ margin-bottom:.25rem; break-inside:avoid; }
+  .lp-copy li::marker{ color:var(--cobalt); }
+
+  .lp-details{ margin:0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:1px; background:rgba(17,17,17,.18); border:1px solid rgba(17,17,17,.18); }
+  .lp-details div{ background:var(--paper); padding:.55rem .75rem; }
+  .lp-details dt{ font-family:var(--mono); font-size:var(--a3); font-weight:700; letter-spacing:.12em; text-transform:uppercase; opacity:.7; }
+  .lp-details dd{ margin:0; font-weight:600; }
+
+  /* Form */
+  .lp-apply{ background:var(--ink); color:var(--paper); padding-block:clamp(2.5rem,5vw,4rem); }
+  .lp-apply__grid{ display:grid; grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr); gap:clamp(2rem,5vw,4.5rem); align-items:start; }
+  .lp-apply h2{ color:var(--paper); font-size:var(--d3); margin:0 0 1rem; }
+  .lp-apply .q-card{ color:var(--ink); border-color:var(--paper); box-shadow:8px 8px 0 var(--yellow); }
+  .lp-apply .q-card h2{ color:var(--ink); }
+  .lp-apply .field{ margin-bottom:1rem; }
+  .lp-apply .meta a{ color:var(--paper); }
+
+  select.input{
+    appearance:none; -webkit-appearance:none; cursor:pointer; padding-right:2.75rem;
+    background-image:linear-gradient(45deg,transparent 50%,var(--ink) 50%),linear-gradient(135deg,var(--ink) 50%,transparent 50%);
+    background-position:calc(100% - 1.35rem) 55%, calc(100% - 1rem) 55%;
+    background-size:.35rem .35rem; background-repeat:no-repeat;
+  }
+  .check{ display:flex; gap:.85rem; align-items:flex-start; cursor:pointer; font-size:var(--r3); line-height:1.5; margin-top:.5rem; }
+  .check input{ accent-color:var(--cobalt); width:20px; height:20px; flex:none; margin:.1rem 0 0; }
+
+  @media (max-width:900px){
+    .lp-intro,.lp-row,.lp-apply__grid{ grid-template-columns:minmax(0,1fr); }
+    .lp-details{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+  }
+  @media (max-width:560px){ .lp-copy ul{ columns:1; } }
+</style>
+</head>
+<body>
+
+<header class="lp-bar">
+  <div class="wrap">
+    <a class="logo" href="index.html" aria-label="Organizational Intelligence, home">
+      <img class="logo__img" src="assets/img/logo-ink.png" width="640" height="282" alt="Organizational Intelligence">
+    </a>
+  </div>
+</header>
+
+<main>
+
+<!-- ------------------------------------------------ HEADER -->
+<section class="lp-hero">
+  <div class="lp-bricks" aria-hidden="true">
+    <img class="tilt-r" src="assets/img/bricks/brick-red-2x4-onpaper.png" style="top:14%;right:4%;" width="300" height="300" alt="" role="presentation">
+    <img class="tilt-l" src="assets/img/bricks/brick-yellow-1x3-onpaper.png" style="bottom:10%;right:46%;" width="300" height="300" alt="" role="presentation">
+    <img class="tilt-r" src="assets/img/bricks/brick-blue-2x2-onpaper.png" style="bottom:10%;right:6%;" width="300" height="300" alt="" role="presentation">
+  </div>
+  <div class="wrap">
+    <p class="lp-eyebrow">A complimentary hands-on teaming workshop using the LEGO&reg; Serious Play&reg; method</p>
+    <h1>Better Together, One Brick at a Time</h1>
+    <p class="sub">Teaming that makes a <span class="mark">difference</span></p>
+    <div class="btn-row">
+      <a class="btn btn--primary" href="#apply">Apply for a complimentary workshop</a>
+    </div>
+    <a class="lp-sticker" href="#apply" data-event="bt_apply_click" data-placement="sticker">
+      <span class="lp-sticker__small">2 teams only</span>
+      <span class="lp-sticker__big">Complimentary</span>
+      <span class="lp-sticker__cta">Apply now &rarr;</span>
+    </a>
+  </div>
+</section>
+
+<!-- ------------------------------------------------ 1. THE COPY -->
+<article class="lp-copy">
+  <div class="lp-bricks" aria-hidden="true">
+    <img class="tilt-l" src="assets/img/bricks/brick-green-arch-onpaper.png" style="top:24%;right:1.5%;" width="300" height="300" alt="" role="presentation">
+    <img class="tilt-r" src="assets/img/bricks/brick-pink-2x3-onpaper.png" style="top:48%;right:2.5%;" width="300" height="300" alt="" role="presentation">
+    <img class="tilt-l" src="assets/img/bricks/brick-cyan-slope-onpaper.png" style="top:74%;right:1.2%;" width="300" height="300" alt="" role="presentation">
+  </div>
+  <div class="wrap">
+
+    <div class="lp-intro">
+      <figure class="lp-photo">
+        <img src="assets/img/lsp-model-closeup.jpg" width="1600" height="900" loading="lazy"
+             alt="Close-up of a LEGO SERIOUS PLAY model: minifigures on green and grey baseplates, with gears, flags, a bridge and a rocky outcrop.">
+      </figure>
+      <div>
+        <p class="lead">This year has asked a lot of businesses and the people inside them.</p>
+        <p>So I&rsquo;m setting aside two complimentary workshop slots for teams who could benefit from stepping away from the day-to-day, reconnecting, and experiencing a different way of working together.</p>
+        <p class="punch">No slides. No presentations about teamwork.</p>
+        <p>Instead, your team will spend two and a half hours building, thinking, sharing, listening, and seeing one another&rsquo;s perspectives in a completely different way.</p>
+        <p>Using the LEGO&reg; Serious Play&reg; method, everyone participates. Everyone builds. Everyone has a voice.</p>
+      </div>
+    </div>
+
+    <div class="lp-row">
+      <h2><img src="assets/img/bricks/brick-red-2x4-onpaper.png" width="300" height="300" alt="" role="presentation">The challenge</h2>
+      <div>
+        <p class="question">How might we bring out the best in how we work together as a team?</p>
+        <p>Teams can spend so much time getting the work done that they rarely get the opportunity to stop and look at how they work together.</p>
+        <p>This workshop creates that space.</p>
+        <p>Through a hands-on, facilitated experience, your team will explore what helps you work well together, surface different perspectives, and discover what could make working together even better.</p>
+      </div>
+    </div>
+
+    <div class="lp-row">
+      <h2><img src="assets/img/bricks/brick-yellow-1x3-onpaper.png" width="300" height="300" alt="" role="presentation">The purpose</h2>
+      <div>
+        <p>This is not traditional team building, and it&rsquo;s not another workshop where a few people do most of the talking.</p>
+        <p>It&rsquo;s an opportunity to:</p>
+        <ul>
+          <li>Get everyone actively involved</li>
+          <li>Break away from slides and traditional discussion</li>
+          <li>Hear perspectives that may not normally surface</li>
+          <li>Create meaningful conversations and connection</li>
+          <li>See your team and how you work together from a different angle</li>
+          <li>Leave with insights you can take back into everyday work</li>
+        </ul>
+        <p>And yes, have some fun along the way.</p>
+      </div>
+    </div>
+
+    <div class="lp-row">
+      <h2><img src="assets/img/bricks/brick-lime-slope-onpaper.png" width="300" height="300" alt="" role="presentation">Why LEGO&reg; SERIOUS PLAY&reg;?</h2>
+      <div>
+        <p>LEGO&reg; SERIOUS PLAY&reg; is a facilitated method that uses building, metaphor, storytelling, and reflection to help people think and communicate differently.</p>
+        <p>Instead of simply asking a question and discussing it, participants build their responses and share the meaning behind what they have created.</p>
+        <p>The result is a highly participatory experience where the conversation isn&rsquo;t limited to the quickest thinker, the most senior person, or the loudest voice in the room.</p>
+        <p class="punch">Everyone builds. Everyone shares. Everyone contributes.</p>
+      </div>
+    </div>
+
+    <div class="lp-row">
+      <h2><img src="assets/img/bricks/brick-blue-2x2-onpaper.png" width="300" height="300" alt="" role="presentation">Who is it for?</h2>
+      <div>
+        <p>This experience is designed for an existing team that works together regularly.</p>
+        <p>Leadership teams, startup teams, functional teams, project teams, or small organizations are all welcome to apply.</p>
+        <p>You don&rsquo;t need to have a specific team problem to solve.</p>
+        <p>You simply need to be curious about how your team could work better together.</p>
+      </div>
+    </div>
+
+    <div class="lp-row">
+      <h2><img src="assets/img/bricks/brick-cyan-slope-onpaper.png" width="300" height="300" alt="" role="presentation">The details</h2>
+      <dl class="lp-details">
+        <div><dt>Duration</dt><dd>2.5 hours</dd></div>
+        <div><dt>Team size</dt><dd>Up to 12 participants</dd></div>
+        <div><dt>Format</dt><dd>In person</dd></div>
+        <div><dt>Method</dt><dd>LEGO&reg; SERIOUS PLAY&reg;</dd></div>
+        <div><dt>Cost</dt><dd>Complimentary</dd></div>
+        <div><dt>Availability</dt><dd>2 teams only</dd></div>
+        <div><dt>Location</dt><dd>UAE</dd></div>
+        <div><dt>Language</dt><dd>English or Arabic</dd></div>
+      </dl>
+    </div>
+
+    <div class="lp-row">
+      <h2><img src="assets/img/bricks/brick-pink-2x3-onpaper.png" width="300" height="300" alt="" role="presentation">Why am I offering this?</h2>
+      <div>
+        <p>It has been a challenging year for many businesses.</p>
+        <p>I wanted to set aside a little of my time and practice to give something back.</p>
+        <p>I simply want these two sessions to go to teams that could genuinely benefit from the experience.</p>
+      </div>
+    </div>
+
+  </div>
+</article>
+
+<!-- ------------------------------------------------ 2. THE FORM -->
+<section class="lp-apply" id="apply">
+  <div class="wrap lp-apply__grid">
+    <div>
+      <h2>Could this be your team?</h2>
+      <p>Tell me a little about your organization, your team, and why you think Better Together, One Brick at a Time would be valuable for you right now.</p>
+      <p>I&rsquo;ll choose two teams where I believe this experience can be most useful.</p>
+      <p class="meta mt-2">Questions? <a href="mailto:hello@orgintelligence.io">hello@orgintelligence.io</a></p>
+    </div>
+
+    <!-- Submitted through the same-origin HubSpot integration. -->
+    <form class="q-card" id="bt-form" novalidate>
+      <noscript><p>Please enable JavaScript to apply, or email <a href="mailto:hello@orgintelligence.io">hello@orgintelligence.io</a>.</p></noscript>
+      <p class="kicker kicker--plain">Apply for a complimentary workshop</p>
+
+      <div class="grid grid--2" style="gap:0 1rem;">
+        <label class="field"><span>First name <span class="req">*</span></span>
+          <input class="input" name="firstName" maxlength="100" type="text" autocomplete="given-name" required></label>
+        <label class="field"><span>Last name <span class="req">*</span></span>
+          <input class="input" name="lastName" maxlength="100" type="text" autocomplete="family-name" required></label>
+      </div>
+
+      <label class="field"><span>Email <span class="req">*</span></span>
+        <input class="input" name="email" maxlength="254" type="email" autocomplete="email" required></label>
+
+      <div class="grid grid--2" style="gap:0 1rem;">
+        <label class="field"><span>Company name <span class="req">*</span></span>
+          <input class="input" name="company" maxlength="200" type="text" autocomplete="organization" required></label>
+        <label class="field"><span>WhatsApp number <span class="req">*</span></span>
+          <input class="input" name="whatsapp" maxlength="100" type="tel" inputmode="tel" autocomplete="tel" placeholder="+971" required></label>
+      </div>
+      <div class="grid grid--2" style="gap:0 1rem;">
+
+        <label class="field"><span>How many people are on the team that would participate? <span class="req">*</span></span>
+          <select class="input" name="teamSize" required>
+            <option value="">Choose one</option>
+            <option>2&ndash;4</option>
+            <option>5&ndash;8</option>
+            <option>9&ndash;12</option>
+            <option>More than 12</option>
+          </select></label>
+
+        <label class="field"><span>How long has this team been working together? <span class="req">*</span></span>
+          <select class="input" name="teamTenure" required>
+            <option value="">Choose one</option>
+            <option>Less than 6 months</option>
+            <option>6&ndash;12 months</option>
+            <option>1&ndash;2 years</option>
+            <option>More than 2 years</option>
+          </select></label>
+      </div>
+
+      <label class="field"><span>What would make this experience valuable for your team right now? <span class="req">*</span></span>
+        <textarea class="input" name="valueNow" maxlength="5000" rows="3" required></textarea></label>
+
+      <label class="field"><span>If you could improve one thing about how your team works together, what would it be? <span class="req">*</span></span>
+        <textarea class="input" name="improveOneThing" maxlength="5000" rows="2" required></textarea></label>
+
+      <label class="field"><span>Where would the workshop take place? <span class="req">*</span></span>
+        <input class="input" name="location" maxlength="1000" type="text" autocomplete="street-address" placeholder="Your office address" required></label>
+
+      <label class="field"><span>Anything else you&rsquo;d like me to know about your team? (optional)</span>
+        <textarea class="input" name="anythingElse" maxlength="5000" rows="2"></textarea></label>
+
+      <label class="check">
+        <input type="checkbox" name="consent" value="yes" required>
+        <span>I understand that this is a complimentary in-person workshop for one intact team of up to 12 participants, and that our organization will provide a suitable space for the session. <span class="req">*</span></span>
+      </label>
+
+      <p class="meta">Read our <a href="privacy.html" style="color:var(--ink)">privacy policy</a> for how we handle your information.</p>
+
+      <!-- honeypot: hidden from people, catnip for bots -->
+      <div class="hp" aria-hidden="true">
+        <label>Company website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+      <input type="hidden" name="utm_source"><input type="hidden" name="utm_medium">
+      <input type="hidden" name="utm_campaign"><input type="hidden" name="ref">
+      <input type="hidden" name="page" value="better-together">
+
+      <p class="form-error" id="form-error" role="alert" tabindex="-1" hidden></p>
+
+      <div class="btn-row mt-2">
+        <button class="btn btn--primary btn--lg" type="submit">Apply for a complimentary workshop</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="signup">
+      <div class="signup__pitch">
+        <p class="kicker">Insights to your inbox</p>
+        <h3>Occasional, practical, written by a person.</h3>
+        <p>Things we&rsquo;ve actually seen work. No theory, no newsletter treadmill.</p>
+      </div>
+      <form class="signup__form" id="newsletter-form" novalidate>
+        <label class="vh" for="nl-email">Email address</label>
+        <input class="input input--ink" id="nl-email" name="email" maxlength="254" type="email" autocomplete="email" placeholder="you@company.com" required>
+        <div class="hp" aria-hidden="true"><label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
+        <button class="btn btn--yellow" type="submit" data-event="newsletter_signup" data-placement="footer">Subscribe</button>
+        <p class="signup__msg" role="alert" hidden></p>
+      </form>
+    </div>
+
+    <div class="footer-grid footer-grid--4">
+      <div>
+        <a class="logo logo--stack" href="index.html" aria-label="Organizational Intelligence, home">
+          <img class="logo__img" src="assets/img/logo-light.png" width="640" height="282" alt="Organizational Intelligence">
+        </a>
+      </div>
+
+      <div class="footer-col">
+        <h3>Studio</h3>
+        <ul>
+          <li><a href="index.html#what-we-do">What We Do</a></li>
+          <li><a href="lego-serious-play.html">LEGO&reg; Serious Play&reg;</a></li>
+          <li><a href="about.html">About</a></li>
+          <li><a href="podcast.html">Podcast</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>Start</h3>
+        <ul>
+          <li><a href="book.html" data-carry-source data-event="book_consultation" data-placement="footer">Book a Free Consultation</a></li>
+          <li><a href="how-we-work-check.html" data-carry-source data-event="start_check" data-placement="footer">The WOW Assessment</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h3>Listen</h3>
+        <ul class="ico-list">
+          <li><a class="ico-link" href="https://podcasts.apple.com/us/podcast/organizational-intelligence-podcast/id6804267156" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/apple.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">Apple Podcasts</a></li>
+          <li><a class="ico-link" href="https://open.spotify.com/show/4AWltTpsOrGKudJ5S6bLD6" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/spotify.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">Spotify</a></li>
+          <li><a class="ico-link" href="https://play.anghami.com/podcast/1098945694" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/anghami.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">anghami</a></li>
+        </ul>
+        <h3 style="margin-top:1.75rem;">Follow</h3>
+        <ul class="ico-list">
+          <li><a class="ico-link" href="https://www.linkedin.com/company/organizational-intelligence-oi" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/linkedin.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">LinkedIn</a></li>
+          <li><a class="ico-link" href="https://www.youtube.com/@Organizational-Intelligence" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/youtube.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">YouTube</a></li>
+          <li><a class="ico-link" href="https://www.instagram.com/organizational.intelligence/" target="_blank" rel="noopener"><img class="ico" src="assets/img/social/instagram.png" width="64" height="64" alt="" role="presentation" aria-hidden="true">Instagram</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom footer-bottom--single">
+      <span>&copy; 2026 Organizational Intelligence. LEGO&reg; and SERIOUS PLAY&reg; are trademarks of the LEGO Group, which does not sponsor or endorse this workshop.</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+<script src="assets/js/newsletter.js"></script>
+<script src="assets/js/better-together.js"></script>
+</body>
+</html>

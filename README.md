@@ -448,3 +448,54 @@ build command skips dependency installation and cannot bundle the PDF function.
 The static build output remains the repository root.
 
 The conditional keeps older branches without a package lock deployable.
+
+
+## Better Together workshop landing page
+
+`better-together.html` preserves the supplied ZIP design and assets. No PDF was included
+in the ZIP. `assets/js/better-together.js` submits to `POST /api/better-together`.
+The server validates every required answer, exact dropdown values and format confirmation,
+then submits the application to HubSpot. No marketing subscription is requested.
+
+HubSpot setup completed on 2026-09-25 in account **46983756**:
+- Published form: **Better Together — Complimentary Workshop Application**.
+- Form ID: `c078a340-21e5-4bab-97e6-7c7213256102`.
+- Editor: https://app.hubspot.com/forms/46983756/editor/c078a340-21e5-4bab-97e6-7c7213256102/edit/form
+- Public HubSpot form: https://share.hsforms.com/1wHijQCHlS6uX5nxyEyVhAgrz0wc
+- Production domain `orgintelligence.io` is already in HubSpot's additional site domains.
+- Submission notifications retain HubSpot's default recipient (the account user).
+
+| Page answer | HubSpot internal name | Type |
+|---|---|---|
+| First name | `firstname` | Standard text |
+| Last name | `lastname` | Standard text |
+| Email | `email` | Standard email |
+| Company | `company` | Standard text |
+| WhatsApp | `mobilephone` | Standard phone |
+| Team size | `bt_team_size` | Dropdown: 2–4, 5–8, 9–12, More than 12 |
+| Team tenure | `bt_team_tenure` | Dropdown: Less than 6 months, 6–12 months, 1–2 years, More than 2 years |
+| Value now | `bt_value_now` | Multi-line text |
+| One improvement | `bt_improve_one_thing` | Multi-line text |
+| Location | `bt_workshop_location` | Single-line text |
+| Additional notes | `bt_anything_else` | Optional multi-line text |
+| Workshop format confirmation | `bt_format_confirmed` | Single checkbox |
+| Source / medium / campaign | `bt_utm_source`, `bt_utm_medium`, `bt_utm_campaign` | Hidden text |
+| Referrer | `bt_referrer` | Hidden text |
+
+The handler uses the published form ID by default for this account. Set
+`HUBSPOT_BETTER_TOGETHER_FORM_ID` to override it for a separate environment, and keep
+`HUBSPOT_PORTAL_ID` configured. IDs are public identifiers, not credentials.
+All submitted CRM properties are present in the HubSpot form definition, as required by
+[HubSpot's submission validation](https://developers.hubspot.com/changelog/amendment-to-forms-api-submission-validation).
+
+Run `npm run test:workshop` for server validation and mocked HubSpot field-mapping checks.
+Use the existing Cloudflare Pages deployment workflow to publish the landing page at
+`https://orgintelligence.io/better-together`. The website change has not been deployed.
+Do not use a static-only preview server for live submissions: the Pages Function is required.
+Local mock mode confirms the UI flow without creating CRM contacts or sending emails.
+A real end-to-end contact submission remains to be tested after deployment.
+
+The source introduction said two hours while its details said 2.5 hours. The page now
+consistently uses 2.5 hours, taking the details section as authoritative.
+Desktop and 390px mobile rendering, required-field feedback, mock confirmation,
+and failed-submission answer retention were verified in the in-app browser.
