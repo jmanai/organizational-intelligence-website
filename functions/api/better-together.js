@@ -1,6 +1,6 @@
 import {
-  assertSameOrigin, clean, handleError, HttpError, json, readJson,
-  submitHubSpotForm, validEmail, verifyTurnstile
+  assertSameOrigin, clean, escapeHtml, handleError, HttpError, json, readJson,
+  sendEmail, submitHubSpotForm, validEmail, verifyTurnstile
 } from '../_lib/common.js';
 
 const fields = {
@@ -44,6 +44,34 @@ export async function onRequestPost({ request, env }) {
     ], {
       pageUri: new URL('/better-together', request.url).href,
       pageName: 'Better Together, One Brick at a Time'
+    });
+
+    const rows = [
+      ['Form', 'better-together'],
+      ['Page', new URL('/better-together', request.url).href],
+      ['Name', `${values.firstName} ${values.lastName}`],
+      ['Email', values.email], ['Company', values.company],
+      ['WhatsApp', values.whatsapp], ['Team size', values.teamSize],
+      ['Team tenure', values.teamTenure],
+      ['What would make this valuable now', values.valueNow],
+      ['One thing to improve', values.improveOneThing],
+      ['Workshop location', values.location],
+      ['Anything else about the team', values.anythingElse || 'Not provided'],
+      ['Workshop format confirmed', 'Yes'],
+      ['Campaign source', values.utm_source || 'Not provided'],
+      ['Campaign medium', values.utm_medium || 'Not provided'],
+      ['Campaign', values.utm_campaign || 'Not provided'],
+      ['Referrer', values.ref || 'Not provided']
+    ];
+    const htmlRows = rows.map(([label, value]) =>
+      `<tr><th align="left" valign="top" style="padding:8px 16px 8px 0">${escapeHtml(label)}</th><td style="padding:8px 0;white-space:pre-wrap">${escapeHtml(value)}</td></tr>`
+    ).join('');
+    await sendEmail(env, {
+      to: ['hello@orgintelligence.io'],
+      reply_to: values.email,
+      subject: `Better Together form — ${values.company.replace(/[\r\n]+/g, ' ')}`,
+      html: `<h1>New Better Together workshop application</h1><p>This application came from the better-together form.</p><table>${htmlRows}</table>`,
+      text: `New Better Together workshop application\nThis application came from the better-together form.\n\n${rows.map(([label, value]) => `${label}: ${value}`).join('\n\n')}`
     });
     return json({ ok: true });
   } catch (error) {

@@ -455,7 +455,10 @@ The conditional keeps older branches without a package lock deployable.
 `better-together.html` preserves the supplied ZIP design and assets. No PDF was included
 in the ZIP. `assets/js/better-together.js` submits to `POST /api/better-together`.
 The server validates every required answer, exact dropdown values and format confirmation,
-then submits the application to HubSpot. No marketing subscription is requested.
+then submits the application to HubSpot and emails every answer to `hello@orgintelligence.io`
+using the existing Resend integration (`RESEND_API_KEY` and `EMAIL_FROM`). The subject is
+`Better Together form — <company>`, the body identifies the `better-together` form,
+and Reply-To is the applicant's email address. No marketing subscription is requested.
 
 HubSpot setup completed on 2026-09-25 in account **46983756**:
 - Published form: **Better Together — Complimentary Workshop Application**.
@@ -490,7 +493,7 @@ All submitted CRM properties are present in the HubSpot form definition, as requ
 
 Run `npm run test:workshop` for server validation and mocked HubSpot field-mapping checks.
 Use the existing Cloudflare Pages deployment workflow to publish the landing page at
-`https://orgintelligence.io/better-together`. The website change has not been deployed.
+`https://orgintelligence.io/better-together`. The landing page is deployed to development at `https://dev.orgintelligence.io/better-together`.
 Do not use a static-only preview server for live submissions: the Pages Function is required.
 Local mock mode confirms the UI flow without creating CRM contacts or sending emails.
 A real end-to-end contact submission remains to be tested after deployment.
