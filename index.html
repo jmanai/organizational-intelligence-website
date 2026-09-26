@@ -37,13 +37,12 @@
 .promo-bar__brick{ width:28px; height:28px; object-fit:contain; flex:none; }
 .promo-bar__text{ margin:0; max-width:none; font-size:var(--r3); line-height:1.4; }
 .promo-bar__text b{ font-weight:700; }
-.promo-bar__tag{
-  background:var(--yellow); color:var(--ink); border:2px solid var(--paper);
-  font-family:var(--mono); font-size:var(--a3); font-weight:700; letter-spacing:.12em;
-  text-transform:uppercase; padding:.3rem .55rem; transform:rotate(-2deg); white-space:nowrap;
+.promo-bar__link{
+  color:var(--yellow); font-size:var(--r3); font-weight:700;
+  text-decoration:underline; text-underline-offset:.2em; white-space:nowrap;
 }
-.promo-bar .btn{ background:var(--yellow); color:var(--ink); border-color:var(--paper); box-shadow:3px 3px 0 var(--paper); }
-.promo-bar .btn:hover{ background:#E8B203; color:var(--ink); box-shadow:1px 1px 0 var(--paper); }
+.promo-bar__link:hover{ color:var(--paper); }
+.promo-bar__link:focus-visible{ outline:2px solid var(--yellow); outline-offset:4px; }
 .promo-bar__close{
   position:absolute; right:var(--gut); top:50%; transform:translateY(-50%);
   width:2rem; height:2rem; background:none; border:0; color:var(--paper);
@@ -64,9 +63,8 @@
 <aside class="promo-bar" id="promo-bar" aria-label="Announcement">
   <div class="wrap">
     <img class="promo-bar__brick" src="assets/img/bricks/brick-red-2x4-onink.png" width="300" height="300" alt="" role="presentation">
-    <p class="promo-bar__text"><b>Better Together:</b> a complimentary LEGO&reg; Serious Play&reg; teaming workshop. 2 teams only.</p>
-    <span class="promo-bar__tag">Valid for October 2026</span>
-    <a class="btn btn--sm" href="/better-together" data-carry-source data-event="bt_banner_click" data-placement="promo_bar">Apply now <span aria-hidden="true">&rarr;</span></a>
+    <p class="promo-bar__text"><b>Better Together:</b> Complimentary team workshop &middot; 2 teams &middot; October 2026</p>
+    <a class="promo-bar__link" href="/better-together" data-carry-source data-event="bt_banner_click" data-placement="promo_bar">Apply now <span aria-hidden="true">&rarr;</span></a>
   </div>
   <button class="promo-bar__close" type="button" aria-label="Close announcement">&times;</button>
 </aside>
