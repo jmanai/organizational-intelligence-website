@@ -11,11 +11,20 @@
     } catch (_) { status.classList.remove('vh'); status.textContent = 'Copy the article address from your browser’s address bar.'; }
   }
   if (copy) copy.addEventListener('click', copyLink);
-  if (share) share.addEventListener('click', async function () {
-    if (!navigator.share) return copyLink();
-    try {await navigator.share({title:document.querySelector('h1').textContent,url:location.origin+location.pathname});}
-    catch (error) {if (error.name !== 'AbortError') copyLink();}
-  });
+  if (share) {
+    document.addEventListener('click', function (event) {
+      if (!share.contains(event.target)) share.open = false;
+    });
+    document.addEventListener('keydown', function (event) {
+      if (event.key === 'Escape' && share.open) {
+        share.open = false;
+        share.querySelector('summary').focus();
+      }
+    });
+    share.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {share.open = false;});
+    });
+  }
   var links = document.querySelectorAll('.article-toc a');
   if ('IntersectionObserver' in window && links.length) {
     var observer = new IntersectionObserver(function(entries) {
