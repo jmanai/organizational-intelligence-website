@@ -12,6 +12,6 @@
     "skipLibCheck": true,
     "noEmit": true
   },
-  "include": ["**/*.ts", "**/*.tsx", "../content/sanity.json"],
+  "include": ["**/*.ts", "**/*.tsx", "../content/sanity-config.mjs"],
   "exclude": ["node_modules", "dist"]
 }

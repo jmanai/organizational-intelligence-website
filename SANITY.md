@@ -20,7 +20,7 @@ no paid plan, billing information, or editor invitations are needed for this set
 
 ## Connection
 
-Public project settings live in `content/sanity.json`. This file must contain the
+Public project settings live in `content/sanity-config.mjs`. This file must contain the
 actual Sanity project ID before the editor can connect. Project IDs and dataset
 names are public identifiers, not credentials. Never put API tokens in that file
 or in a `SANITY_STUDIO_*` environment variable: those variables reach browsers.
@@ -32,7 +32,7 @@ To finish connecting a new account:
    with a public dataset named `production`. Public datasets expose published
    content; drafts still require authentication. Uploaded assets are public,
    including assets used only by drafts, so do not upload confidential files.
-3. Set the project ID in `content/sanity.json`.
+3. Set the project ID in `content/sanity-config.mjs`.
 4. Install the editor dependencies with `npm --prefix studio ci`.
 5. From `studio/`, run `npx sanity login`, then `npx sanity exec scripts/seed.mjs
    --with-user-token`. Seeding creates the four topic records and Yosr's author

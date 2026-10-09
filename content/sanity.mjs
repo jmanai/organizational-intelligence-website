@@ -1,4 +1,4 @@
-import defaults from './sanity.json' with {type: 'json'};
+import defaults from './sanity-config.mjs';
 
 export class ContentError extends Error {
   constructor(message, status = 502) { super(message); this.status = status; }
