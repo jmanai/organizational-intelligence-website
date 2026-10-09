@@ -1,0 +1,33 @@
+import assert from 'node:assert/strict';
+import {renderBody, renderArticle, renderTool, renderIndex, safeLink} from '../content/ideas-render.mjs';
+import {onRequest} from '../functions/ideas/[[path]].js';
+const block=(text,more={})=>({_type:'block',children:[{_type:'span',text,marks:[]}],...more});
+const article={_id:'one',title:'A <better> meeting',slug:'better-meeting',publishedAt:'2026-01-01T00:00:00Z',excerpt:'Try a <small> change',author:{name:'An author'},topics:[],body:[block('Start here',{style:'h2'}),block('<script>alert(1)</script>'),block('one',{listItem:'bullet',level:1}),block('nested',{listItem:'number',level:2}),block('two',{listItem:'bullet',level:1})]};
+const {html,headings}=renderBody(article.body);
+assert.match(html,/<ul><li>one<ol><li>nested<\/li><\/ol><\/li><li>two<\/li><\/ul>/);
+assert.match(html,/&lt;script&gt;/);assert.equal(headings[0].id,'section-1');
+for(const href of ['javascript:alert(1)','data:text/html,bad','//evil.example','/\\evil','https://a\n.test']) assert.equal(safeLink(href),'');
+const injected=renderBody([block('bad',{markDefs:[{_key:'x',_type:'link',href:'javascript:alert(1)'}],children:[{text:'bad',marks:['x']}]})]).html;
+assert.doesNotMatch(injected,/href=/);
+const markup=renderArticle({article,related:[],origin:'https://dev.orgintelligence.io'});
+assert.match(markup,/rel="canonical" href="https:\/\/dev.orgintelligence.io\/ideas\/better-meeting"/);
+assert.match(markup,/application\/ld\+json/);assert.doesNotMatch(markup,/<script>alert/);
+assert.match(markup,/href="#section-1"/);assert.doesNotMatch(markup,/View the tool/);
+const resource={url:'https://cdn.sanity.io/files/test/production/file.pdf',label:'Our worksheet',filename:'worksheet.pdf',size:2048};
+assert.match(renderTool({article:{...article,resource},origin:'https://dev.orgintelligence.io'}),/file.pdf\?dl=worksheet.pdf/);
+assert.match(renderIndex({articles:[],topic:'strategy',q:'<missing>',page:1,hasNext:false,origin:'http://localhost:8788'}),/No ideas found/);
+const realFetch=globalThis.fetch;
+const request=(path,method='GET')=>onRequest({request:new Request('https://dev.orgintelligence.io'+path,{method}),env:{SANITY_PROJECT_ID:'test1234',SANITY_DATASET:'production'}});
+try{
+ globalThis.fetch=async(url)=>{const u=new URL(url);assert.equal(u.searchParams.get('perspective'),'published');return Response.json({result:[article]});};
+ let response=await request('/ideas/better-meeting');assert.equal(response.status,200);assert.equal(response.headers.get('x-robots-tag'),'noindex, nofollow');assert.match(await response.text(),/By An author/);
+ response=await request('/ideas/better-meeting','HEAD');assert.equal(response.status,200);assert.equal(await response.text(),'');
+ assert.equal((await request('/ideas/better-meeting','POST')).status,405);
+ assert.equal((await request('/ideas/tools/better-meeting')).status,404);
+ assert.equal((await request('/ideas?page=-1')).status,400);
+ assert.equal((await request('/ideas/')).status,308);
+ assert.match(await (await request('/ideas/sitemap.xml')).text(),/<loc>https:\/\/dev.orgintelligence.io\/ideas\/better-meeting<\/loc>/);
+ globalThis.fetch=async()=>Response.json({result:[]});assert.equal((await request('/ideas/unpublished')).status,404);
+ globalThis.fetch=async()=>{throw new Error('private upstream detail')};response=await request('/ideas');assert.equal(response.status,502);assert.equal(response.headers.get('cache-control'),'no-store');assert.doesNotMatch(await response.text(),/private upstream detail/);
+} finally {globalThis.fetch=realFetch;}
+console.log('Ideas checks passed: server rendering, rich text, nested lists, unsafe links, SEO, resources, preview noindex, missing articles, and service failures.');

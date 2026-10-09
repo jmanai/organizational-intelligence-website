@@ -506,3 +506,19 @@ The source introduction said two hours while its details said 2.5 hours. The pag
 consistently uses 2.5 hours, taking the details section as authoritative.
 Desktop and 390px mobile rendering, required-field feedback, mock confirmation,
 and failed-submission answer retention were verified in the in-app browser.
+
+
+## Ideas and Sanity
+
+The content editor is at https://orgintelligence.sanity.studio/. Published content
+appears at `/ideas`, `/ideas/<slug>`, and optional `/ideas/tools/<slug>` PDF pages.
+Search, topic filters, metadata, rich text, and article pages are server rendered.
+See [SANITY.md](SANITY.md) for editing and verification instructions.
+
+Build with `npm ci --ignore-scripts && npm run build`; Cloudflare Pages output must
+be `dist/site`, with the repository root unchanged for Functions bundling. Never
+deploy the repository root or Studio setup files as website assets.
+
+Local: `npm run build && npx wrangler pages dev dist/site --port 8788`.
+Checks: `npm run test:cms && npm run test:ideas`. Development deploys from
+`develop`; production remains on `main` until separately approved.

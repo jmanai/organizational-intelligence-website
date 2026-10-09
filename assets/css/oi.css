@@ -1314,3 +1314,11 @@ textarea.input{ resize:vertical; min-height:7rem; line-height:1.55; }
   text-decoration-thickness:.06em;
   opacity:.85;
 }
+
+/* Keep the full navigation comfortable with the Ideas section. */
+@media (min-width:1181px) and (max-width:1400px){
+  .site-header .wrap{gap:1rem}
+  .site-header .nav{gap:.8rem}
+  .site-header .nav a,.site-header .header-cta{font-size:.8125rem}
+  .site-header .header-cta{padding-inline:.85rem}
+}

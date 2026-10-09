@@ -12,3 +12,8 @@ ALLOWED_ORIGINS=http://localhost:8788
 # TURNSTILE_SECRET_KEY=replace_me
 
 HUBSPOT_BETTER_TOGETHER_FORM_ID=c078a340-21e5-4bab-97e6-7c7213256102
+
+# Optional overrides. Default Sanity project/dataset: content/sanity.json.
+# The website reads only published content and does not need a Sanity API token.
+# SANITY_PROJECT_ID=your_project_id
+# SANITY_DATASET=production

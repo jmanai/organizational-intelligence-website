@@ -1,0 +1,25 @@
+{
+  "name": "oi-content-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "sanity dev --host localhost",
+    "build": "sanity build",
+    "check": "tsc --noEmit",
+    "deploy": "sanity deploy"
+  },
+  "engines": { "node": ">=22.12" },
+  "dependencies": {
+    "@portabletext/react": "8.0.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sanity": "6.18.0",
+    "styled-components": "6.5.3"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.9.3"
+  }
+}
