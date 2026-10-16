@@ -21,6 +21,9 @@ const request=(path,method='GET')=>onRequest({request:new Request('https://dev.o
 try{
  globalThis.fetch=async(url)=>{const u=new URL(url);assert.equal(u.searchParams.get('perspective'),'published');return Response.json({result:[article]});};
  let response=await request('/ideas/better-meeting');assert.equal(response.status,200);assert.equal(response.headers.get('x-robots-tag'),'noindex, nofollow');assert.match(await response.text(),/By An author/);
+ // A related article with an unresolved topic must not crash the article page.
+ globalThis.fetch=async()=>Response.json({result:[{...article,relatedArticles:[{...article,_id:'related',slug:'related-meeting',title:'Related meeting',topics:[null]}]}]});
+ response=await request('/ideas/better-meeting');assert.equal(response.status,200);assert.match(await response.text(),/Related meeting/);
  response=await request('/ideas/better-meeting','HEAD');assert.equal(response.status,200);assert.equal(await response.text(),'');
  assert.equal((await request('/ideas/better-meeting','POST')).status,405);
  assert.equal((await request('/ideas/tools/better-meeting')).status,404);

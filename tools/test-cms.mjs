@@ -24,11 +24,12 @@ assert.equal(calls, 2);
 const filtered = await fetchArticles({env, fetchImpl: async () => Response.json({result: [
   {...article, _id: 'drafts.one'}, {...article, _id: 'versions.release.one'},
   {...article, publishedAt: '2999-01-01'}, {...article, publishedAt: 'invalid'},
-  {...article, slug: '../bad'}, {...article, relatedArticles: [{...article, _id: 'drafts.related'}, article], topics: [null]},
+  {...article, slug: '../bad'}, {...article, relatedArticles: [{...article, _id: 'drafts.related'}, {...article, topics: [null, {_id: 'topic.one', title: 'Strategy', slug: 'strategy'}]}], topics: [null]},
 ]})});
 assert.equal(filtered.length, 1);
 assert.equal(filtered[0].relatedArticles.length, 1);
 assert.deepEqual(filtered[0].topics, []);
+assert.deepEqual(filtered[0].relatedArticles[0].topics, [{_id: 'topic.one', title: 'Strategy', slug: 'strategy'}]);
 for (const options of [{slug: 'bad" ]'}, {slug: ''}, {topic: '..'}, {limit: 101}, {limit: 1.5}, {offset: -1}]) {
   await assert.rejects(fetchArticles({env, ...options, fetchImpl: goodFetch}), error => error.status === 400);
 }

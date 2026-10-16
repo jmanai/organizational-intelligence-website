@@ -30,6 +30,12 @@ function isPublishedArticle(article, now = Date.now()) {
     && Number.isFinite(Date.parse(article.publishedAt)) && Date.parse(article.publishedAt) <= now;
 }
 
+// Sanity returns null for references whose target is missing or unpublished.
+// Related-article cards need the same topic cleanup as the main article.
+function normalizeTopics(article) {
+  return {...article, topics: Array.isArray(article.topics) ? article.topics.filter(Boolean) : []};
+}
+
 // Drafts never require a website token: the authenticated Studio handles its own preview.
 // Website queries always use the published perspective and never forward caller credentials.
 export async function fetchArticles({env = {}, slug, topic, q, limit = 24, offset = 0, full = false, fetchImpl = fetch} = {}) {
@@ -58,8 +64,7 @@ export async function fetchArticles({env = {}, slug, topic, q, limit = 24, offse
     throw new ContentError('Ideas are temporarily unavailable. Please try again shortly.');
   }
   return result.filter(article => isPublishedArticle(article)).map(article => ({
-    ...article,
-    topics: Array.isArray(article.topics) ? article.topics.filter(Boolean) : [],
-    ...(article.relatedArticles ? {relatedArticles: article.relatedArticles.filter(item => isPublishedArticle(item))} : {}),
+    ...normalizeTopics(article),
+    ...(article.relatedArticles ? {relatedArticles: article.relatedArticles.filter(item => isPublishedArticle(item)).map(normalizeTopics)} : {}),
   }));
 }
