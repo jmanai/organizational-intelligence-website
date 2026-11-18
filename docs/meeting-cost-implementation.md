@@ -116,3 +116,10 @@ The user clarified that color should be reduced, not removed, with less yellow. 
 Verification: packaging build and whitespace checks passed; all 56 automated browser checks passed, including exact 792×782 salary-focus geometry, calculations, keyboard controls, responsive overflow at 360–1440, mock consultation, and failure handling. Desktop 1440×1000 and mobile 390×844 screenshots were visually inspected. In-app preview at 792×782 was refreshed and visually reviewed; page identity/content were correct, no error overlay appeared, and warning/error logs were empty. Supplemental Playwright used the existing suite because the dedicated Browser plugin/skill is not available; CUA supplied in-app visual review. Evidence: `/Users/wajdimanai/.codex/visualizations/2026/11/18/01a1ef5e-c8f7-7822-bc02-c041531e3316/meeting-cost-balanced-colors/`.
 
 Preview remains `http://localhost:8790/meeting-cost`. Local only; hosted release, live delivery, native-device testing, and formal accessibility verification remain pending. No external submissions or service changes occurred.
+
+
+## Development deployment compatibility — November 18, 2026
+
+The user authorized committing and deploying to development. Initial commit `2409b85` reached `develop`, but deployment `e715002d-c853-4308-97b5-af19f8d108cb` failed during Functions compilation: Cloudflare's Wrangler 3.114.17 compiler rejected the JSON import `with` attribute. The static build succeeded. The failure was also reproduced locally with Wrangler 3.91.0.
+
+Changed the single shared configuration from JSON to `assets/data/meeting-cost-config.mjs`, imported by the API and tests, and dynamically imported by the browser within its existing load-error handling. Data values and application behavior are unchanged. This avoids import-attribute syntax and keeps one authoritative configuration. Deployment verification is recorded separately in the project context and release evidence after completion.

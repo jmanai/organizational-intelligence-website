@@ -2,9 +2,7 @@ import {initialState,numberValue,meetingResults,money,quantity,summaryRows,aggre
 import {setupContact} from './meeting-cost-contact.mjs';
 const $ = id => document.getElementById(id);
 async function start() {
-  const response = await fetch('/assets/data/meeting-cost.json');
-  if (!response.ok) throw new Error('Configuration unavailable');
-  const config = await response.json();
+  const {default:config} = await import('../data/meeting-cost-config.mjs');
   let state = initialState(config), started = false, announcement;
   for (const [id,options] of [['currency',config.currencies.map(([code,name])=>[code,`${code} — ${name}`])],['duration',config.durations],['frequency',config.frequencies]]) {
     for (const [value,label] of options) $(id).add(new Option(label,value));

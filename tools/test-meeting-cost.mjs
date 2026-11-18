@@ -1,8 +1,7 @@
 import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';
+import config from '../assets/data/meeting-cost-config.mjs';
 import {initialState,meetingResults,numberValue,money,aggregateSnapshot} from '../assets/js/meeting-cost-core.mjs';
 import {onRequestPost,onRequestGet} from '../functions/api/meeting-cost-contact.js';
-const config=JSON.parse(await readFile(new URL('../assets/data/meeting-cost.json',import.meta.url)));
 let checks=0;const check=(condition)=>{assert.ok(condition);checks++;};const near=(actual,expected)=>check(Math.abs(actual-expected)<1e-7);
 let state=initialState(config),r=meetingResults(state,config);
 near(r.meetingCost,865.3846153846154);near(r.annualCost,45000);near(r.hours,6);near(r.annualHours,312);

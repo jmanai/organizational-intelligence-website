@@ -139,7 +139,7 @@ No salary/contact data in analytics, query strings, logs, localStorage, or sessi
 | --- | --- |
 | `meeting-cost.html` | Standalone page, semantic inputs/results, copy, inline form, noindex during review |
 | `assets/css/meeting-cost.css` | Scoped responsive layout and selected/error states |
-| `assets/data/meeting-cost.json` | Allowed options, defaults, helper copy, source link, version |
+| `assets/data/meeting-cost-config.mjs` | Allowed options, defaults, helper copy, source link, version |
 | `assets/js/meeting-cost-core.mjs` | Pure validation/calculation functions and constants shared with the API |
 | `assets/js/meeting-cost.mjs` | Input state, preservation, live formatting, accessible result updates |
 | `assets/js/meeting-cost-contact.mjs` | Visible summary, request payload, loading/success/error handling |

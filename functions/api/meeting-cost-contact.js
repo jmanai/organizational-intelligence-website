@@ -1,4 +1,4 @@
-import config from '../../assets/data/meeting-cost.json' with {type:'json'};
+import config from '../../assets/data/meeting-cost-config.mjs';
 import {meetingResults,summaryRows} from '../../assets/js/meeting-cost-core.mjs';
 import {assertSameOrigin,clean,escapeHtml,HttpError,json,readJson,validEmail} from '../_lib/common.js';
 
