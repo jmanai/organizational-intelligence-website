@@ -12,10 +12,15 @@
     "studio:check": "npm --prefix studio run check",
     "content:export": "node tools/export-ideas.mjs",
     "test:cms": "node tools/test-cms.mjs",
-    "test:ideas": "node tools/test-ideas.mjs"
+    "test:ideas": "node tools/test-ideas.mjs",
+    "test:meeting-cost": "node tools/test-meeting-cost.mjs",
+    "test:meeting-cost:browser": "node tools/test-meeting-cost-browser.mjs"
   },
   "dependencies": {
     "@pdf-lib/fontkit": "^1.1.1",
     "pdf-lib": "^1.17.1"
+  },
+  "devDependencies": {
+    "playwright": "^1.65.1"
   }
 }
