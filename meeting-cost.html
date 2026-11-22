@@ -1,54 +1,182 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Meeting Cost Calculator | Organizational Intelligence</title>
 <meta name="description" content="Understand the money and employee time invested in your meetings, then make that time work better.">
-<meta name="robots" content="noindex, nofollow"><meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="canonical" href="https://orgintelligence.io/meeting-cost">
 <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
 <link rel="preload" href="/assets/fonts/anton-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/css/fonts.css"><link rel="stylesheet" href="/assets/css/oi.css"><link rel="stylesheet" href="/assets/css/meeting-cost.css">
-<script src="/assets/js/site.js" defer></script><script type="module" src="/assets/js/meeting-cost.mjs"></script>
+<link rel="stylesheet" href="/assets/css/fonts.css">
+<link rel="stylesheet" href="/assets/css/meeting-cost.css">
+<script src="/assets/js/site.js" defer>
+</script>
+<script type="module" src="/assets/js/meeting-cost.mjs">
+</script>
+<meta property="og:type" content="website">
+<meta property="og:title" content="Meeting Cost Calculator | Organizational Intelligence">
+<meta property="og:description" content="Your meetings might be costing more than you think. Let’s do the math.">
+<meta property="og:url" content="https://orgintelligence.io/meeting-cost">
 </head>
-<body class="meeting-page">
+<body class="meeting-page display">
 <a class="skip-link" href="#main">Skip to content</a>
-<header class="mc-header"><div class="mc-wrap"><a href="https://orgintelligence.io/" aria-label="Organizational Intelligence, home"><img src="/assets/img/logo-ink.png" width="640" height="282" alt="Organizational Intelligence"></a><a class="mc-back" href="https://orgintelligence.io/">Back to website <span aria-hidden="true">↗</span></a></div></header>
+<header>
+<div class="wrap">
+<a href="/" aria-label="Organizational Intelligence, home">
+<img src="/assets/img/logo-ink.png" width="640" height="282" alt="Organizational Intelligence">
+</a>
+<a class="back" href="/">Back to website ↗</a>
+</div>
+</header>
 <main id="main" tabindex="-1">
-<div class="mc-wrap">
-<section class="mc-intro"><h1><span class="mc-highlight">Meeting Cost</span> Calculator</h1><p>Understand the money and employee time invested in your meetings.</p></section>
+<div class="wrap">
+<section class="intro">
+<h1>
+<span>Meeting Cost</span> Calculator</h1>
+</section>
 <p id="load-error" role="alert" hidden>The calculator could not load. Please refresh, or <a href="mailto:hello@orgintelligence.io">contact us</a>.</p>
-<noscript><p>Please enable JavaScript to use the calculator. You can also <a href="mailto:hello@orgintelligence.io">contact us about redesigning your meetings</a>.</p></noscript>
-<div class="mc-calculator" id="calculator" hidden>
-<form id="calculator-inputs" tabindex="-1" class="mc-inputs" novalidate aria-label="Meeting details">
-<div class="mc-section-heading"><h2><span class="mc-step" aria-hidden="true">01</span> Your meeting</h2><button type="button" class="mc-text-button" id="reset-calculator">Clear inputs</button></div>
-<p class="mc-hint" id="example-note">Editable example. Change the figures to match your meeting.</p>
-<a href="#meeting-results" class="mc-jump">Jump to results</a>
-<div class="mc-pair"><label class="mc-field" for="currency">Currency<select id="currency" aria-describedby="currency-help"></select></label><div class="mc-field"><label for="attendees">Number of attendees</label><div class="mc-attendee-stepper"><button type="button" data-attendee-step="-1" aria-label="Remove one attendee"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12"/></svg></button><input id="attendees" type="number" min="1" max="50" step="1" inputmode="numeric" value="6" aria-describedby="attendees-error"><button type="button" data-attendee-step="1" aria-label="Add one attendee"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 10h12M10 4v12"/></svg></button></div><span class="mc-error" id="attendees-error" hidden>Enter a whole number from 1 to 50.</span></div></div>
-<p class="mc-hint" id="currency-help">Currency is for entry and display only. Changing it keeps your numbers; no conversion is applied.</p>
-<fieldset class="mc-mode"><legend><span class="mc-step" aria-hidden="true">02</span> Salary entry</legend><div class="mc-mode-options"><label><input type="radio" name="salary-mode" value="average" checked><span><strong>One average salary</strong><small>Best for a quick estimate</small></span></label><label><input type="radio" name="salary-mode" value="individual"><span><strong>Individual salaries</strong><small>Best for a more precise calculation</small></span></label></div></fieldset>
-<div id="average-fields" class="mc-reveal"><label class="mc-field" for="average-salary">Average monthly salary per attendee<div class="mc-money-input"><span data-currency>AED</span><input id="average-salary" type="text" inputmode="decimal" value="25,000" autocomplete="off" aria-describedby="average-error salary-help"></div><span class="mc-error" id="average-error" hidden>Enter a salary from 0 to 1,000,000,000.</span></label></div>
-<div id="individual-fields" class="mc-reveal" hidden><div class="mc-section-heading"><p>Monthly salary per attendee</p><button class="mc-text-button" type="button" id="fill-salaries">Use 25,000 for all</button></div><div id="salary-list" class="mc-salary-list"></div><p class="mc-hint">Entries are restored if you remove and add attendees again during this visit.</p></div>
-<p class="mc-hint" id="salary-help">No names needed. Salary entries stay in this page's memory.</p>
-<h2 class="mc-timing-title"><span class="mc-step" aria-hidden="true">03</span> Time &amp; rhythm</h2><div class="mc-pair mc-timing"><label class="mc-field" for="duration">Meeting duration<select id="duration"></select></label><label class="mc-field" for="frequency">How often does this meeting happen?<select id="frequency"></select></label></div>
-<div id="custom-fields" class="mc-reveal" hidden><label class="mc-field" for="custom-frequency">Number of meetings per year<input id="custom-frequency" type="number" min="1" max="100000" step="1" inputmode="numeric" aria-describedby="custom-error"><span class="mc-error" id="custom-error" hidden>Enter a whole number from 1 to 100,000.</span></label></div>
-<p class="mc-hint" id="frequency-note">Weekly assumes 52 meetings per year.</p>
+<noscript>
+<p>Please enable JavaScript to use the calculator.</p>
+</noscript>
+<section id="calculator" hidden class="calculator" aria-label="Meeting Cost Calculator">
+<form id="calculator-inputs" class="fields" aria-label="Meeting details" novalidate>
+<div class="field currency">
+<label for="currency">Currency</label>
+<select id="currency">
+</select>
+</div>
+<div class="field attendees">
+<label for="attendees">Number of attendees</label>
+<div class="stepper">
+<button type="button" data-attendee-step="-1" aria-label="Remove one attendee">−</button>
+<input id="attendees" type="number" inputmode="numeric" min="1" max="50" value="6" aria-describedby="calculator-error">
+<button type="button" data-attendee-step="1" aria-label="Add one attendee">+</button>
+</div>
+</div>
+<fieldset class="modes" aria-label="Salary options">
+<label>
+<input type="radio" name="salary-mode" value="average" checked>One average salary</label>
+<label>
+<input type="radio" name="salary-mode" value="individual">Individual salaries</label>
+</fieldset>
+<div class="field salary" id="average-fields">
+<label for="average-salary">Average monthly salary per attendee</label>
+<div class="money">
+<span data-currency>AED</span>
+<input id="average-salary" type="text" inputmode="decimal" value="25,000" autocomplete="off" aria-describedby="calculator-error">
+</div>
+</div>
+<div class="individual" id="individual-fields" hidden>
+<button type="button" class="text-button" id="fill-salaries">Use 25,000 for all</button>
+<div class="salary-list" id="salary-list">
+</div>
+</div>
+<div class="field duration">
+<label for="duration-range">Meeting duration <strong id="duration-label">1 hour</strong>
+</label>
+<input id="duration-range" type="range" min="0" max="6" value="3" aria-valuetext="1 hour">
+<div class="range-labels" aria-hidden="true">
+<span>15 min</span>
+<span>3 hours</span>
+</div>
+</div>
+<div class="field frequency">
+<label for="frequency">How often does this meeting happen?</label>
+<select id="frequency">
+</select>
+</div>
+<div class="field custom" id="custom-fields" hidden>
+<label for="custom-frequency">Number of meetings per year</label>
+<input id="custom-frequency" type="number" min="1" max="100000" inputmode="numeric" step="1" aria-describedby="calculator-error">
+</div>
+<p id="calculator-error" class="error" role="status" hidden>
+</p>
+<div class="experiments">
+<button type="button" id="reset-calculator">Start over</button>
+</div>
 </form>
-<section id="meeting-results" class="mc-results" aria-labelledby="result-title" tabindex="-1">
-<p id="result-title">This meeting costs approximately</p><p class="mc-cost" id="meeting-cost">—</p><p class="mc-person-hours" id="person-hours">— person-hours</p><p id="result-hint" class="mc-hint" hidden></p>
-<div class="mc-annual"><div><h3>Annual cost</h3><p id="annual-cost">—</p></div><div><h3>Annual employee time</h3><p><span id="annual-hours">—</span><small>person-hours</small></p></div></div>
-<p class="mc-hint" id="annual-note">Based on 52 meetings per year.</p>
-<details class="mc-details" id="meeting-breakdown" open><summary>Meeting breakdown</summary><dl class="mc-breakdown"><div><dt>Attendees</dt><dd id="result-attendees">—</dd></div><div><dt>Combined hourly cost</dt><dd id="hourly-cost">—</dd></div><div><dt>Meeting duration</dt><dd id="result-duration">—</dd></div><div><dt>Meetings per year</dt><dd id="result-frequency">—</dd></div></dl></details>
-<a class="btn btn--primary mc-result-cta" href="#redesign" data-redesign-cta>Redesign this meeting <span aria-hidden="true">↗</span></a><a class="mc-jump" href="#calculator-inputs">Edit meeting details</a>
+<div class="result">
+<div class="meeting-total">
+<p class="result-label">This meeting costs approximately</p>
+<div class="cost" id="meeting-cost">AED 865.38</div>
+</div>
+<div class="annual">
+<span>Annual cost</span>
+<strong id="annual-cost">AED 45,000.00</strong>
+</div>
+<p class="sr-only" role="status" id="result-announcement" aria-live="polite" aria-atomic="true">
+</p>
+</div>
 </section>
 </div>
-<p class="mc-assumptions">Based on monthly salaries and 2,080 working hours per year (40 hours × 52 weeks). Excludes benefits, overhead, and preparation time. Cost reflects time invested; the value created matters too.</p>
-<p class="vh" id="result-announcement" role="status" aria-live="polite" aria-atomic="true"></p>
+<section class="consult wrap" id="redesign">
+<div class="research">
+<h2>Wasteful meetings<br>cost more than money.</h2>
+<p>Microsoft found that inefficient meetings are the #1 disruptor to productivity.</p>
+<div class="stat">68%</div>
+<p class="stat-copy">of people say they lack enough uninterrupted focus time.</p>
+<p class="source">Source: <a href="https://www.microsoft.com/en-us/worklab/work-trend-index/will-ai-fix-work">Microsoft Work Trend Index, 2023</a>
+</p>
 </div>
-<section class="mc-story"><div class="mc-wrap mc-story-grid"><h2>Wasteful meetings cost more than money.</h2><div><p>Microsoft found that inefficient meetings are the #1 disruptor to productivity, while 68% of people say they lack enough uninterrupted focus time.</p><p class="mc-source">Source: <a href="https://www.microsoft.com/en-us/worklab/work-trend-index/will-ai-fix-work" target="_blank" rel="noopener noreferrer">Microsoft Work Trend Index, 2023</a></p><h3>Meetings are part of how work gets done. Design them better.</h3><p>I help teams audit and redesign meetings so they create clarity, better decisions and real progress.</p><a class="btn btn--primary" href="#redesign" data-redesign-cta>Let's redesign this meeting together</a><p class="mc-hint">30-minute free consultation</p></div></div></section>
-<section id="redesign" class="mc-wrap mc-contact" tabindex="-1" aria-labelledby="redesign-title"><div><h2 id="redesign-title">Let's redesign this meeting together.</h2><p>30-minute free consultation. Fill out the form below, and we'll arrange a time to talk.</p><div class="mc-summary"><h3>Your meeting summary</h3><dl id="contact-summary"></dl><p class="mc-hint">This aggregate summary is included with your request. It contains salary-derived costs; individual salary entries are excluded.</p></div></div>
-<form id="meeting-contact" novalidate><fieldset id="contact-fields" disabled><legend class="vh">Consultation request</legend><label class="mc-field" for="first-name"><span>First name <span aria-hidden="true">*</span></span><input id="first-name" name="firstName" autocomplete="given-name" maxlength="100" required></label><label class="mc-field" for="contact-email"><span>Email <span aria-hidden="true">*</span></span><input id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" required></label><label class="mc-field" for="company"><span>Company <span aria-hidden="true">*</span></span><input id="company" name="company" autocomplete="organization" maxlength="200" required></label><label class="mc-field" for="message">What would you like this meeting to do better? <small>Optional</small><textarea id="message" name="message" rows="4" maxlength="2500"></textarea></label><div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"></label></div><label class="mc-consent"><input id="contact-consent" name="consent" type="checkbox" required><span>I agree to be contacted about this request and to the processing of my details and meeting summary as described in the <a href="/privacy">privacy policy</a>.</span></label><div id="meeting-turnstile"></div><button type="submit" class="btn btn--primary">Request my free consultation</button><p class="mc-hint">A person will follow up to arrange a time.</p></fieldset><p id="contact-feedback" role="status" tabindex="-1" hidden></p></form>
+<div class="offer">
+<h2>Meetings are part of how work gets done. Design them better.</h2>
+<p>I help teams audit and redesign meetings so they create clarity, better decisions and real progress.</p>
+<div class="invitation">
+<h3>Let's redesign this meeting together.</h3>
+<p>30-minute free consultation. Fill out the form below, and we'll arrange a time to talk.</p>
+</div>
+<form class="contact" id="meeting-contact" novalidate>
+<fieldset id="contact-fields" disabled>
+<legend class="vh">Consultation request</legend>
+<div class="row">
+<label class="field" for="first-name">
+<span>First name <span aria-hidden="true">*</span>
+</span>
+<input id="first-name" name="firstName" autocomplete="given-name" maxlength="100" required>
+</label>
+<label class="field" for="contact-email">
+<span>Email <span aria-hidden="true">*</span>
+</span>
+<input id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" required>
+</label>
+</div>
+<label class="field" for="company">
+<span>Company <span aria-hidden="true">*</span>
+</span>
+<input id="company" name="company" autocomplete="organization" maxlength="200" required>
+</label>
+<label class="field" for="message">What would you like this meeting to do better? <small>Optional</small>
+<textarea id="message" name="message" rows="4" maxlength="2500">
+</textarea>
+</label>
+<div class="hp" aria-hidden="true">
+<label>Website<input name="website" tabindex="-1" autocomplete="off">
+</label>
+</div>
+<label class="consent">
+<input id="contact-consent" name="consent" type="checkbox" required>
+<span>I agree to be contacted about this request and to the processing of my details and meeting summary as described in the <a href="/privacy">privacy policy</a>.</span>
+</label>
+<div id="meeting-turnstile">
+</div>
+<button type="submit" class="primary">Request my free consultation<span aria-hidden="true">↗</span>
+</button>
+<p class="response">I respond to all inquiries personally.<br>I’ll get back to you within 24 hours.</p>
+</fieldset>
+<p class="form-feedback" id="contact-feedback" role="status" tabindex="-1" hidden>
+</p>
+</form>
+</div>
 </section>
 </main>
-<footer class="mc-footer"><div class="mc-wrap footer-bottom"><span>© 2026 Organizational Intelligence · <a href="/privacy">Privacy</a></span><a href="mailto:hello@orgintelligence.io">hello@orgintelligence.io</a></div></footer>
-</body></html>
+<footer>
+<div class="wrap footer-bottom">
+<span>© 2026 Organizational Intelligence · <a href="/privacy">Privacy</a>
+</span>
+<a href="mailto:hello@orgintelligence.io">hello@orgintelligence.io</a>
+</div>
+</footer>
+</body>
+</html>
